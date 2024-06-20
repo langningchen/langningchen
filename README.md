@@ -4,4 +4,4 @@
 
 ![](https://github-readme-stats-sigma-five.vercel.app/api/top-langs/?username=langningchen&layout=compact)
 
-![]("https://wakatime.com/share/@langningc2009/f86fcb93-9b6a-4ab9-a3d7-d074811fc440.svg")
+![](https://wakatime.com/share/@langningchen/f86fcb93-9b6a-4ab9-a3d7-d074811fc440.svg)
