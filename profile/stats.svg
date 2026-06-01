@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Langning Chen's GitHub Stats, Rank: A+</title>
-        <desc id="descId">Total Stars Earned: 379, Total Commits  (last year) : 959, Total PRs: 271, Total PRs Merged: 234, Merged PRs Percentage: 86.35, Total PRs Reviewed: 30, Total Issues: 188, Total Discussions Started: 21, Contributed to (last year): 13</desc>
+        <desc id="descId">Total Stars Earned: 379, Total Commits  (last year) : 959, Total PRs: 271, Total PRs Merged: 235, Merged PRs Percentage: 86.72, Total PRs Reviewed: 30, Total Issues: 188, Total Discussions Started: 21, Contributed to (last year): 13</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -210,7 +210,7 @@
         x="219.01"
         y="12.5"
         data-testid="prs_merged"
-      >234</text>
+      >235</text>
     </g>
   </g><g transform="translate(0, 100)">
     <g class="stagger" style="animation-delay: 1050ms" transform="translate(25, 0)">
@@ -225,7 +225,7 @@
         x="219.01"
         y="12.5"
         data-testid="prs_merged_percentage"
-      >86.35 %</text>
+      >86.72 %</text>
     </g>
   </g><g transform="translate(0, 125)">
     <g class="stagger" style="animation-delay: 1200ms" transform="translate(25, 0)">
