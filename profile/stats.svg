@@ -9,7 +9,7 @@
         aria-labelledby="descId"
       >
         <title id="titleId">Langning Chen's GitHub Stats, Rank: A+</title>
-        <desc id="descId">Total Stars Earned: 381, Total Commits  (last year) : 959, Total PRs: 271, Total PRs Merged: 235, Merged PRs Percentage: 86.72, Total PRs Reviewed: 31, Total Issues: 188, Total Discussions Started: 21, Contributed to (last year): 13</desc>
+        <desc id="descId">Total Stars Earned: 382, Total Commits  (last year) : 961, Total PRs: 272, Total PRs Merged: 236, Merged PRs Percentage: 86.76, Total PRs Reviewed: 31, Total Issues: 188, Total Discussions Started: 21, Contributed to (last year): 13</desc>
         <style>
           .header {
             font: 600 18px 'Segoe UI', Ubuntu, Sans-Serif;
@@ -73,7 +73,7 @@
         stroke-dashoffset: 251.32741228718345;
       }
       to {
-        stroke-dashoffset: 18.11257630020822;
+        stroke-dashoffset: 18.053654800121198;
       }
     }
   
@@ -165,7 +165,7 @@
         x="219.01"
         y="12.5"
         data-testid="stars"
-      >381</text>
+      >382</text>
     </g>
   </g><g transform="translate(0, 25)">
     <g class="stagger" style="animation-delay: 600ms" transform="translate(25, 0)">
@@ -180,7 +180,7 @@
         x="219.01"
         y="12.5"
         data-testid="commits"
-      >959</text>
+      >961</text>
     </g>
   </g><g transform="translate(0, 50)">
     <g class="stagger" style="animation-delay: 750ms" transform="translate(25, 0)">
@@ -195,7 +195,7 @@
         x="219.01"
         y="12.5"
         data-testid="prs"
-      >271</text>
+      >272</text>
     </g>
   </g><g transform="translate(0, 75)">
     <g class="stagger" style="animation-delay: 900ms" transform="translate(25, 0)">
@@ -210,7 +210,7 @@
         x="219.01"
         y="12.5"
         data-testid="prs_merged"
-      >235</text>
+      >236</text>
     </g>
   </g><g transform="translate(0, 100)">
     <g class="stagger" style="animation-delay: 1050ms" transform="translate(25, 0)">
@@ -225,7 +225,7 @@
         x="219.01"
         y="12.5"
         data-testid="prs_merged_percentage"
-      >86.72 %</text>
+      >86.76 %</text>
     </g>
   </g><g transform="translate(0, 125)">
     <g class="stagger" style="animation-delay: 1200ms" transform="translate(25, 0)">
