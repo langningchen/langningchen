@@ -140,7 +140,7 @@
           data-testid="lang-progress"
           x="119.08"
           y="0"
-          width="65.28"
+          width="65.29"
           height="8"
           fill="#4F5D95"
         />
@@ -148,9 +148,9 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="184.36"
+          x="184.37"
           y="0"
-          width="27.68"
+          width="27.67"
           height="8"
           fill="#3178c6"
         />
@@ -160,7 +160,7 @@
           data-testid="lang-progress"
           x="212.04000000000002"
           y="0"
-          width="22.44"
+          width="22.45"
           height="8"
           fill="#555555"
         />
@@ -168,7 +168,7 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="234.48000000000002"
+          x="234.49"
           y="0"
           width="10.05"
           height="8"
@@ -178,7 +178,7 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="244.53000000000003"
+          x="244.54000000000002"
           y="0"
           width="12.08"
           height="8"
@@ -188,7 +188,7 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="246.61000000000004"
+          x="246.62000000000003"
           y="0"
           width="11.81"
           height="8"
@@ -198,7 +198,7 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="248.42000000000004"
+          x="248.43000000000004"
           y="0"
           width="10.8"
           height="8"
@@ -208,7 +208,7 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="249.22000000000006"
+          x="249.23000000000005"
           y="0"
           width="10.44"
           height="8"
@@ -218,7 +218,7 @@
         <rect
           mask="url(#rect-mask)"
           data-testid="lang-progress"
-          x="249.66000000000005"
+          x="249.67000000000004"
           y="0"
           width="10.34"
           height="8"
