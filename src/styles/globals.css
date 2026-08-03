@@ -1,0 +1,332 @@
+@font-face {
+  font-family: "Monaspace Radon";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400 800;
+  src: url("/MonaspaceRadon-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cascadia Code";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 200 700;
+  src: url("/fonts/CascadiaCode.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Genshin UI";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400 900;
+  src: url("/fonts/HYWenHei-85W.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Teyvat Black";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/TeyvatBlack-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Star Rail UI";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400 800;
+  src: url("/fonts/HYRunYuan-65W.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Star Rail Neue";
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+  src: url("/fonts/StarRailNeue-Sans-Regular.ttf") format("truetype");
+}
+
+:root {
+  color-scheme: dark light;
+  scroll-padding-top: 64px;
+  scrollbar-width: none;
+}
+
+:root::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: #87dbac;
+  color: #102018;
+}
+
+.mono {
+  font-family: "Monaspace Radon", monospace;
+}
+
+.terminal-mono {
+  font-family: "Cascadia Code", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-variant-ligatures: contextual;
+}
+
+.site-header .MuiButtonBase-root {
+  font-family: Inter, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+}
+
+.game-page,
+.game-drawer--genshin {
+  --game-accent: #b99a58;
+  --game-accent-ink: #233b38;
+  --game-header: #243d3a;
+  --game-header-ink: #f6f8f4;
+  --game-glyph: #7b6238;
+  --game-hero: #dfece7;
+  --game-line: rgba(255, 255, 255, 0.2);
+  --game-portrait: #d6e5df;
+  --game-showcase: #eaf2ef;
+  --game-stats: #f7faf8;
+}
+
+.game-page {
+  min-height: 100vh;
+}
+
+.game-page--starRail,
+.game-drawer--starRail {
+  --game-accent: #78dcff;
+  --game-accent-ink: #12202a;
+  --game-header: #090f18;
+  --game-header-ink: #eef8fc;
+  --game-glyph: #78dcff;
+  --game-hero: #111a26;
+  --game-line: rgba(120, 220, 255, 0.2);
+  --game-portrait: #1b2937;
+  --game-showcase: #131d29;
+  --game-stats: #0b111a;
+}
+
+.game-page--genshin.game-page--dark,
+.game-drawer--genshin.game-drawer--dark {
+  --game-accent: #d6b96f;
+  --game-accent-ink: #1a160c;
+  --game-glyph: #e2c77e;
+  --game-hero: #101713;
+  --game-line: rgba(214, 185, 111, 0.2);
+  --game-portrait: #202c26;
+  --game-showcase: #111914;
+  --game-stats: #18211d;
+}
+
+.game-page--starRail.game-page--light,
+.game-drawer--starRail.game-drawer--light {
+  --game-accent: #287f9d;
+  --game-accent-ink: #ffffff;
+  --game-glyph: #287f9d;
+  --game-hero: #e5eef2;
+  --game-line: rgba(40, 127, 157, 0.2);
+  --game-portrait: #dce9ee;
+  --game-showcase: #edf3f5;
+  --game-stats: #f8fafb;
+}
+
+.game-page--starRail section:first-child {
+  border-bottom: 3px solid #f1ca68;
+}
+
+.game-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.game-page--genshin .game-glyph,
+.game-drawer--genshin .game-glyph {
+  font-family: "Teyvat Black", sans-serif !important;
+}
+
+.game-page--starRail .game-glyph,
+.game-drawer--starRail .game-glyph {
+  font-family: "Star Rail Neue", sans-serif !important;
+}
+
+.game-glyph {
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.game-glyph--slogan {
+  font-size: 24px;
+  line-height: 1.45;
+  max-width: 620px;
+}
+
+.game-character-card {
+  border-color: var(--game-line);
+  transition: border-color 220ms ease, transform 220ms ease;
+}
+
+.game-character-card:hover {
+  border-color: var(--game-accent);
+  transform: translateY(-5px);
+}
+
+.hero-image {
+  object-fit: cover;
+  object-position: center 58%;
+}
+
+.hero-parallax-image {
+  inset: -7% 0;
+  position: absolute;
+  will-change: transform;
+}
+
+.hero-parallax-overlay {
+  background: #07090a;
+  inset: 0;
+  opacity: 0.66;
+  position: absolute;
+}
+
+.hero-parallax-content {
+  position: relative;
+  width: 100%;
+  will-change: opacity, transform;
+}
+
+.hero-scroll-cue {
+  bottom: 18px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+
+.scroll-cue {
+  animation: scroll-cue 1.8s ease-in-out infinite;
+  color: rgba(245, 246, 240, 0.78);
+}
+
+.scroll-cue:hover {
+  color: #87dbac;
+}
+
+main > .reveal-section {
+  min-height: calc(100svh - 64px);
+}
+
+main > .reveal-section > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: inherit;
+}
+
+@media (min-width: 900px) {
+  :root {
+    scroll-padding-top: 72px;
+  }
+
+  main > .reveal-section {
+    min-height: calc(100svh - 72px);
+  }
+}
+
+.carousel-image {
+  animation: carousel-reveal 520ms ease both;
+  filter: brightness(1.08) saturate(1.03);
+  object-fit: cover;
+}
+
+.terminal-line {
+  min-height: 1.9em;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+.terminal-cursor {
+  animation: terminal-cursor 920ms steps(1) infinite;
+  color: #87dbac;
+  margin-left: 3px;
+}
+
+@keyframes carousel-reveal {
+  from { opacity: 0.35; transform: scale(1.025); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes terminal-cursor {
+  50% { opacity: 0; }
+}
+
+@keyframes scroll-cue {
+  0%, 100% { opacity: 0.58; transform: translateY(0); }
+  50% { opacity: 1; transform: translateY(9px); }
+}
+
+.project-image {
+  transition: transform 280ms ease;
+}
+
+.project-image--interface {
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.02);
+}
+
+.project-image--crop {
+  object-fit: cover;
+  object-position: center 46%;
+  transform: scale(1.35) translateY(-3%);
+}
+
+.project-card:hover .project-image--interface {
+  transform: scale(1.04);
+}
+
+.project-card:hover .project-image--crop {
+  transform: scale(1.39) translateY(-3%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  .project-image {
+    transition: none;
+  }
+
+  .game-character-card {
+    transition: none;
+  }
+
+  .carousel-image,
+  .scroll-cue,
+  .terminal-cursor,
+  .terminal-line {
+    animation: none;
+    clip-path: none;
+  }
+}
