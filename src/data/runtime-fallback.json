@@ -1,6 +1,6 @@
 {
   "calendar": {
-    "total": 2095,
+    "total": 2098,
     "contributions": [
       [
         {
@@ -1939,8 +1939,8 @@
         },
         {
           "date": "2026-08-04",
-          "intensity": "0",
-          "count": 0
+          "intensity": "1",
+          "count": 3
         }
       ]
     ]
@@ -1978,12 +1978,6 @@
         "url": "https://github.com/yltx/vscode-luogu"
       },
       {
-        "issues": 0,
-        "name": "clash-verge-rev/clash-verge-rev",
-        "pullRequests": 3,
-        "url": "https://github.com/clash-verge-rev/clash-verge-rev"
-      },
-      {
         "issues": 1,
         "name": "MasterKale/SimpleWebAuthn",
         "pullRequests": 0,
@@ -1994,12 +1988,6 @@
         "name": "microsoft/vscode",
         "pullRequests": 0,
         "url": "https://github.com/microsoft/vscode"
-      },
-      {
-        "issues": 1,
-        "name": "vernesong/OpenClash",
-        "pullRequests": 0,
-        "url": "https://github.com/vernesong/OpenClash"
       },
       {
         "issues": 1,
@@ -2152,16 +2140,6 @@
         "url": "https://github.com/MasterKale/SimpleWebAuthn/issues/718"
       },
       {
-        "createdAt": "2026-06-17T15:14:54Z",
-        "kind": "issue",
-        "number": 5177,
-        "repository": "vernesong/OpenClash",
-        "state": "open",
-        "title": "[Feature] tcp-fast-open 选项",
-        "updatedAt": "2026-06-17T15:14:54Z",
-        "url": "https://github.com/vernesong/OpenClash/issues/5177"
-      },
-      {
         "createdAt": "2026-05-05T03:26:07Z",
         "kind": "pullRequest",
         "number": 165,
@@ -2312,16 +2290,6 @@
         "url": "https://github.com/IANYEYZ/InkSyncAI/pull/1"
       },
       {
-        "createdAt": "2025-03-29T07:37:53Z",
-        "kind": "pullRequest",
-        "number": 3201,
-        "repository": "clash-verge-rev/clash-verge-rev",
-        "state": "closed",
-        "title": "Fix traffic graph time mismatch",
-        "updatedAt": "2025-04-04T09:52:18Z",
-        "url": "https://github.com/clash-verge-rev/clash-verge-rev/pull/3201"
-      },
-      {
         "createdAt": "2024-08-24T05:51:20Z",
         "kind": "issue",
         "number": 2,
@@ -2450,26 +2418,6 @@
         "title": "Fix code scanning alert - 1",
         "updatedAt": "2025-01-29T07:18:10Z",
         "url": "https://github.com/CYEZOI/OJ/issues/12"
-      },
-      {
-        "createdAt": "2024-12-07T06:47:04Z",
-        "kind": "pullRequest",
-        "number": 2315,
-        "repository": "clash-verge-rev/clash-verge-rev",
-        "state": "closed",
-        "title": "Fix l10n issues",
-        "updatedAt": "2024-12-10T17:02:21Z",
-        "url": "https://github.com/clash-verge-rev/clash-verge-rev/pull/2315"
-      },
-      {
-        "createdAt": "2024-12-07T03:24:40Z",
-        "kind": "pullRequest",
-        "number": 2314,
-        "repository": "clash-verge-rev/clash-verge-rev",
-        "state": "closed",
-        "title": "Fix l10n issues",
-        "updatedAt": "2024-12-07T06:43:38Z",
-        "url": "https://github.com/clash-verge-rev/clash-verge-rev/pull/2314"
       },
       {
         "createdAt": "2024-11-01T15:39:52Z",
@@ -9970,7 +9918,7 @@
       "hireable": null,
       "bio": "A high school student in @CYEZOI , who is interested in developing websites and algorithms for competitive programming.",
       "twitter_username": "langningchen",
-      "public_repos": 48,
+      "public_repos": 47,
       "public_gists": 10,
       "followers": 46,
       "following": 25,
@@ -13826,9 +13774,9 @@
         "readme": "Math [!warning] The Microsoft Math Solver will be retired soon! See 5 for details. Introduction A math solver server using the API of Microsoft Math Solver. Usage 1. Clone this repository 2. Make sure you have npm installed 3. Run npm install to install dependencies 4. Run npm run deploy to publish your project 5. Your math solver is now live! 🎉 License This project is licensed under the terms of the GNU General Public License v3.0."
       }
     },
-    "totalStars": 435
+    "totalStars": 429
   },
-  "installCount": 14761,
+  "installCount": 14757,
   "wakaTime": {
     "dailyAverage": "2 hrs 52 mins",
     "languages": [

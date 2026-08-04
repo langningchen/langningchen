@@ -38,12 +38,20 @@ const CONTRIBUTION_PRIORITY = [
   "jmerle/competitive-companion",
   "CYEZOI/OJ",
   "yltx/vscode-luogu",
-  "clash-verge-rev/clash-verge-rev",
   "MasterKale/SimpleWebAuthn",
   "microsoft/vscode",
-  "vernesong/OpenClash",
   "extend-luogu/extend-luogu",
 ];
+
+const HIDDEN_CONTRIBUTION_REPOSITORIES = new Set([
+  "clash-verge-rev/clash-verge-rev",
+  "vernesong/OpenClash",
+]);
+
+export function isVisibleContributionRepository(repository: string): boolean {
+  return !repository.startsWith("langningchen/")
+    && !HIDDEN_CONTRIBUTION_REPOSITORIES.has(repository);
+}
 
 function repositoryName(repositoryUrl: string): string {
   return repositoryUrl.split("/repos/")[1] ?? repositoryUrl;
@@ -80,7 +88,7 @@ export function aggregateContributions(
   });
 
   return [...projects.values()]
-    .filter((project) => !project.name.startsWith("langningchen/"))
+    .filter((project) => isVisibleContributionRepository(project.name))
     .sort((left, right) => {
       const leftPriority = CONTRIBUTION_PRIORITY.indexOf(left.name);
       const rightPriority = CONTRIBUTION_PRIORITY.indexOf(right.name);
@@ -109,6 +117,6 @@ export function collectContributionRecords(
       updatedAt: item.updated_at,
       url: item.html_url,
     }))
-    .filter((record) => !record.repository.startsWith("langningchen/"))
+    .filter((record) => isVisibleContributionRepository(record.repository))
     .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt));
 }

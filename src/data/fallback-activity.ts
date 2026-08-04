@@ -31,7 +31,6 @@ export const FALLBACK_CONTRIBUTIONS: ContributionProject[] = [
   { issues: 0, name: "jmerle/competitive-companion", pullRequests: 1, url: "https://github.com/jmerle/competitive-companion" },
   { issues: 8, name: "CYEZOI/OJ", pullRequests: 1, url: "https://github.com/CYEZOI/OJ" },
   { issues: 0, name: "yltx/vscode-luogu", pullRequests: 2, url: "https://github.com/yltx/vscode-luogu" },
-  { issues: 0, name: "clash-verge-rev/clash-verge-rev", pullRequests: 2, url: "https://github.com/clash-verge-rev/clash-verge-rev" },
   { issues: 1, name: "MasterKale/SimpleWebAuthn", pullRequests: 0, url: "https://github.com/MasterKale/SimpleWebAuthn" },
   { issues: 1, name: "microsoft/vscode", pullRequests: 0, url: "https://github.com/microsoft/vscode" },
 ];

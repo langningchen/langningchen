@@ -85,7 +85,7 @@ I build tools around real problems in competitive programming and developer work
   <a href="https://github.com/hydro-dev/Hydro"><img src="https://github.com/hydro-dev.png?size=80" width="52" alt="Hydro" /></a>&nbsp;&nbsp;
   <a href="https://github.com/jmerle/competitive-companion"><img src="https://github.com/jmerle.png?size=80" width="52" alt="Competitive Companion" /></a>&nbsp;&nbsp;
   <a href="https://github.com/microsoft/vscode"><img src="https://github.com/microsoft.png?size=80" width="52" alt="Microsoft" /></a>&nbsp;&nbsp;
-  <a href="https://github.com/clash-verge-rev/clash-verge-rev"><img src="https://github.com/clash-verge-rev.png?size=80" width="52" alt="Clash Verge Rev" /></a>
+  <a href="https://github.com/MasterKale/SimpleWebAuthn"><img src="https://github.com/MasterKale.png?size=80" width="52" alt="SimpleWebAuthn" /></a>
 </p>
 
 <p align="center">
@@ -94,27 +94,62 @@ I build tools around real problems in competitive programming and developer work
 
 ## Competitive programming
 
+<p align="center">
+  <img alt="CCF programming level 7" src="https://img.shields.io/badge/CCF_Programming_Level-7-287356?style=flat-square&amp;labelColor=24292f" />
+  <img alt="OIerDB score" src="https://img.shields.io/badge/OIerDB-5824.95-586069?style=flat-square&amp;labelColor=24292f" />
+</p>
+
 <table>
   <thead>
     <tr>
+      <th align="center">Year</th>
       <th>Competition</th>
-      <th>Result</th>
-      <th>Score</th>
+      <th align="center">Award</th>
+      <th align="right">Score</th>
+      <th align="right">National rank</th>
     </tr>
   </thead>
   <tbody>
-    <tr><td>CSP-S 2025</td><td>First Prize</td><td>228 / 400</td></tr>
-    <tr><td>NOIP 2025</td><td>Second Prize</td><td>118 / 400</td></tr>
-    <tr><td>CSP-S 2024</td><td>Second Prize</td><td>160 / 400</td></tr>
-    <tr><td>NOIP 2024</td><td>Third Prize</td><td>107 / 400</td></tr>
-    <tr><td>CSP-S 2023</td><td>First Prize</td><td>175 / 400</td></tr>
+    <tr>
+      <td align="center" rowspan="2"><strong>2025</strong></td>
+      <td><strong>CSP-S</strong></td>
+      <td align="center"><img alt="First Prize" src="https://img.shields.io/badge/First_Prize-8F6B00?style=flat-square" /></td>
+      <td align="right"><code>228 / 400</code></td>
+      <td align="right"><code>1537 / 30497</code></td>
+    </tr>
+    <tr>
+      <td><strong>NOIP</strong></td>
+      <td align="center"><img alt="Second Prize" src="https://img.shields.io/badge/Second_Prize-606875?style=flat-square" /></td>
+      <td align="right"><code>118 / 400</code></td>
+      <td align="right"><code>2513 / 7548</code></td>
+    </tr>
+    <tr>
+      <td align="center" rowspan="2"><strong>2024</strong></td>
+      <td><strong>CSP-S</strong></td>
+      <td align="center"><img alt="Second Prize" src="https://img.shields.io/badge/Second_Prize-606875?style=flat-square" /></td>
+      <td align="right"><code>160 / 400</code></td>
+      <td align="right"><code>5152 / 27521</code></td>
+    </tr>
+    <tr>
+      <td><strong>NOIP</strong></td>
+      <td align="center"><img alt="Third Prize" src="https://img.shields.io/badge/Third_Prize-8A4F2D?style=flat-square" /></td>
+      <td align="right"><code>107 / 400</code></td>
+      <td align="right"><code>2801 / 7510</code></td>
+    </tr>
+    <tr>
+      <td align="center"><strong>2023</strong></td>
+      <td><strong>CSP-S</strong></td>
+      <td align="center"><img alt="First Prize" src="https://img.shields.io/badge/First_Prize-8F6B00?style=flat-square" /></td>
+      <td align="right"><code>175 / 400</code></td>
+      <td align="right"><code>1760 / 19202</code></td>
+    </tr>
   </tbody>
 </table>
 
 ## GitHub activity
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=langningchen&amp;show_icons=true&amp;hide_border=true&amp;bg_color=00000000&amp;title_color=87dbac&amp;text_color=8b949e&amp;icon_color=87dbac&amp;rank_icon=github" height="170" alt="Langning Chen's GitHub statistics" />
+  <a href="https://github.com/langningchen"><img src="./public/github-stats.svg" width="100%" alt="Langning Chen's GitHub statistics" /></a>
 </p>
 
 <p align="center">
