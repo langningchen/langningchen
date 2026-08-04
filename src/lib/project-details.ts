@@ -1,5 +1,6 @@
 import type { GitHubRepository, LanguageStat } from "./github";
 import { aggregateLanguages, repositoryFullName } from "./github";
+import { fetchFromServer } from "./server-fetch";
 
 export interface GitHubContributor {
   avatar_url: string;
@@ -8,16 +9,18 @@ export interface GitHubContributor {
   login: string;
 }
 
-interface GitHubCommit {
-  commit: {
-    author: {
-      date: string;
-    } | null;
-  };
+interface GitHubWeeklyActivity {
+  days: number[];
+  week: number;
 }
+
+const ACTIVITY_RETRY_DELAYS = [0, 750, 2_000];
+const DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+const YEAR_LENGTH = 365;
 
 export interface ProjectDetailsData {
   activity: number[];
+  activityStartDate?: string;
   contributors: GitHubContributor[];
   languages: LanguageStat[];
   readme: string;
@@ -42,21 +45,62 @@ function githubHeaders(accept = "application/vnd.github+json") {
   };
 }
 
-function dailyActivity(commits: GitHubCommit[]): number[] {
-  const days = Array<number>(84).fill(0);
-  const currentTime = Date.now();
-  const dayLength = 24 * 60 * 60 * 1000;
+function annualActivity(weeks: GitHubWeeklyActivity[]) {
+  const activityByDate = new Map<string, number>();
 
-  commits.forEach((commit) => {
-    const date = commit.commit.author?.date;
-    if (!date) return;
-    const daysAgo = Math.floor((currentTime - Date.parse(date)) / dayLength);
-    if (daysAgo >= 0 && daysAgo < days.length) {
-      days[days.length - 1 - daysAgo] += 1;
-    }
+  weeks.forEach((week) => {
+    week.days.forEach((count, dayIndex) => {
+      const date = new Date(week.week * 1000 + dayIndex * DAY_IN_MILLISECONDS);
+      activityByDate.set(date.toISOString().slice(0, 10), count);
+    });
   });
 
-  return days;
+  const endDate = new Date();
+  endDate.setUTCHours(0, 0, 0, 0);
+  const startDate = new Date(endDate.getTime() - (YEAR_LENGTH - 1) * DAY_IN_MILLISECONDS);
+  const activity = Array.from({ length: YEAR_LENGTH }, (_, index) => {
+    const date = new Date(startDate.getTime() + index * DAY_IN_MILLISECONDS);
+    return activityByDate.get(date.toISOString().slice(0, 10)) ?? 0;
+  });
+
+  return {
+    activity,
+    activityStartDate: startDate.toISOString().slice(0, 10),
+  };
+}
+
+function parseWeeklyActivity(payload: unknown): GitHubWeeklyActivity[] | null {
+  if (!Array.isArray(payload)) return null;
+
+  const weeks = payload.filter((value): value is GitHubWeeklyActivity => {
+    if (!value || typeof value !== "object") return false;
+    const candidate = value as Partial<GitHubWeeklyActivity>;
+    return typeof candidate.week === "number"
+      && Array.isArray(candidate.days)
+      && candidate.days.every((count) => typeof count === "number");
+  });
+
+  return weeks.length === payload.length ? weeks : null;
+}
+
+async function fetchAnnualActivity(baseUrl: string) {
+  for (const delay of ACTIVITY_RETRY_DELAYS) {
+    if (delay > 0) {
+      await new Promise<void>((resolve) => setTimeout(resolve, delay));
+    }
+
+    const response = await fetchFromServer(`${baseUrl}/stats/commit_activity`, {
+      headers: githubHeaders(),
+    }, { bypassCache: true });
+
+    if (response.status === 200) {
+      const weeks = parseWeeklyActivity(await response.json());
+      return weeks ? annualActivity(weeks) : null;
+    }
+    if (response.status !== 202) return null;
+  }
+
+  return null;
 }
 
 function summarizeReadme(markdown: string): string {
@@ -73,58 +117,62 @@ function summarizeReadme(markdown: string): string {
 
 export async function getProjectDetails(
   repository: GitHubRepository,
+  fallback: ProjectDetailsData = EMPTY_PROJECT_DETAILS,
 ): Promise<ProjectDetailsData> {
   try {
     const fullName = repositoryFullName(repository);
     const baseUrl = `https://api.github.com/repos/${fullName}`;
-    const [contributorsResponse, commitsResponse, languagesResponse, readmeResponse] =
+    const [contributorsResponse, activity, languagesResponse, readmeResponse] =
       await Promise.all([
-        fetch(`${baseUrl}/contributors?per_page=8`, {
+        fetchFromServer(`${baseUrl}/contributors?per_page=8`, {
           headers: githubHeaders(),
-          next: { revalidate: 3600 },
         }),
-        fetch(`${baseUrl}/commits?per_page=100&since=${new Date(Date.now() - 84 * 24 * 60 * 60 * 1000).toISOString()}`, {
+        fetchAnnualActivity(baseUrl),
+        fetchFromServer(`${baseUrl}/languages`, {
           headers: githubHeaders(),
-          next: { revalidate: 3600 },
         }),
-        fetch(`${baseUrl}/languages`, {
-          headers: githubHeaders(),
-          next: { revalidate: 3600 },
-        }),
-        fetch(`${baseUrl}/readme`, {
+        fetchFromServer(`${baseUrl}/readme`, {
           headers: githubHeaders("application/vnd.github.raw+json"),
-          next: { revalidate: 3600 },
         }),
       ]);
 
     const contributors = contributorsResponse.ok
       ? ((await contributorsResponse.json()) as GitHubContributor[])
-      : [];
-    const commits = commitsResponse.ok
-      ? ((await commitsResponse.json()) as GitHubCommit[])
-      : [];
+      : fallback.contributors;
+    const normalizedActivity = activity ?? {
+      activity: fallback.activity,
+      activityStartDate: fallback.activityStartDate,
+    };
     const languages = languagesResponse.ok
       ? aggregateLanguages([
           (await languagesResponse.json()) as Record<string, number>,
         ])
-      : [];
-    const readme = readmeResponse.ok ? await readmeResponse.text() : "";
+      : fallback.languages;
+    const readme = readmeResponse.ok
+      ? summarizeReadme(await readmeResponse.text())
+      : fallback.readme;
 
     return {
-      activity: dailyActivity(commits),
+      ...normalizedActivity,
       contributors,
       languages,
-      readme: summarizeReadme(readme),
+      readme,
     };
   } catch {
-    return EMPTY_PROJECT_DETAILS;
+    return fallback;
   }
 }
 
 export async function getProjectDetailsMap(
   repositories: GitHubRepository[],
+  fallback: ProjectDetailsMap = {},
 ): Promise<ProjectDetailsMap> {
-  const details = await Promise.all(repositories.map(getProjectDetails));
+  const details = await Promise.all(
+    repositories.map((repository) => {
+      const fullName = repositoryFullName(repository);
+      return getProjectDetails(repository, fallback[fullName]);
+    }),
+  );
   return Object.fromEntries(
     repositories.map((repository, index) => [
       repositoryFullName(repository),

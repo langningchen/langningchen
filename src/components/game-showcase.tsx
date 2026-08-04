@@ -9,12 +9,12 @@ import CardContent from "@mui/material/CardContent";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
 import { useLocale, useTranslations } from "next-intl";
 import { GAME_GLYPH_COPY } from "@/data/game-glyph-copy";
 import type { GameProfile } from "@/lib/game-data";
 import type { GameCharacter } from "@/lib/game-types";
 import GameCharacterDrawer from "./game-character-drawer";
+import Image from "./progressive-image";
 import ScrollReveal from "./scroll-reveal";
 
 interface GameShowcaseProps {

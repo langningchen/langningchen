@@ -11,8 +11,10 @@ node_modules
 dist
 dist-ssr
 .next
+.open-next
 out
 next-env.d.ts
+cloudflare-env.d.ts
 *.tsbuildinfo
 *.local
 
@@ -28,3 +30,4 @@ next-env.d.ts
 *.sw?
 
 .wrangler
+.wrangler-config

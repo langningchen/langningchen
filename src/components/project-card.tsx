@@ -76,7 +76,7 @@ export default function ProjectCard({
           xs: "1 / -1",
           md: isFeatured ? "span 6" : "span 4",
         },
-        minHeight: isFeatured ? 610 : 390,
+        minHeight: isFeatured ? "auto" : 390,
         overflow: "hidden",
         cursor: "pointer",
         transition: "border-color 180ms ease, transform 180ms ease",
@@ -92,25 +92,30 @@ export default function ProjectCard({
         label={mediaLabel}
         media={media}
       />
-      <CardContent sx={{ display: "flex", flexDirection: "column", flexGrow: 1, p: { xs: 2.5, md: 3 } }}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: "center", flexWrap: "wrap", gap: 1, mb: 2 }}>
-          {status && <Chip color={index === 0 ? "primary" : "secondary"} label={status} size="small" />}
-          {repository.archived && <Chip label={t("archived")} size="small" variant="outlined" />}
+      <CardContent sx={{ display: "flex", flexDirection: "column", flexGrow: 1, p: { xs: 2.25, md: 2.5 } }}>
+        <Stack
+          direction="row"
+          sx={{ alignItems: "center", flexWrap: "wrap", gap: 1, justifyContent: "space-between", mb: 1.25 }}
+        >
+          <Typography component="h3" sx={{ fontSize: isFeatured ? 28 : 24 }} variant="h3">
+            {getProjectName(repository.name)}
+          </Typography>
+          <Stack direction="row" sx={{ flexWrap: "wrap", gap: 0.75 }}>
+            {status && <Chip color={index === 0 ? "primary" : "secondary"} label={status} size="small" />}
+            {repository.archived && <Chip label={t("archived")} size="small" variant="outlined" />}
+          </Stack>
         </Stack>
-        <Typography component="h3" sx={{ fontSize: isFeatured ? 30 : 24, mb: 1.5 }} variant="h3">
-          {getProjectName(repository.name)}
-        </Typography>
-        <Typography color="text.secondary" sx={{ flexGrow: 1, lineHeight: 1.7 }}>
+        <Typography color="text.secondary" sx={{ lineHeight: 1.65 }}>
           {description}
         </Typography>
-        {repository.topics.length > 0 && (
+        {!isFeatured && repository.topics.length > 0 && (
           <Stack direction="row" sx={{ flexWrap: "wrap", gap: 0.75, mt: 2 }}>
             {repository.topics.slice(0, 3).map((topic) => (
               <Chip key={topic} label={topic} size="small" variant="outlined" />
             ))}
           </Stack>
         )}
-        <Stack direction="row" spacing={2} sx={{ alignItems: "center", flexWrap: "wrap", gap: 1.5, my: 2.5 }}>
+        <Stack direction="row" spacing={2} sx={{ alignItems: "center", flexWrap: "wrap", gap: 1.5, mb: 1.5, mt: 1.5 }}>
           {repository.language && (
             <Stack direction="row" spacing={0.75} sx={{ alignItems: "center" }}>
               <Box sx={{ bgcolor: languageColor, borderRadius: "50%", height: 10, width: 10 }} />

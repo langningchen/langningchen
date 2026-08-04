@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
   images: {
@@ -16,10 +17,11 @@ const nextConfig: NextConfig = {
     ],
     unoptimized: true,
   },
-  output: "export",
   reactStrictMode: true,
   trailingSlash: true,
   typedRoutes: true,
 };
 
 export default nextConfig;
+
+initOpenNextCloudflareForDev();

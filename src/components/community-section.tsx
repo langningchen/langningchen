@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { ContributionProject } from "@/lib/contributions";
 import ScrollReveal from "./scroll-reveal";
@@ -55,6 +56,7 @@ export default function CommunitySection({ projects }: CommunitySectionProps) {
               <Stack direction="row" spacing={2} sx={{ alignItems: "center", minWidth: 0 }}>
                 <Avatar
                   alt=""
+                  slotProps={{ img: { decoding: "async", loading: "lazy" } }}
                   src={`https://github.com/${repositoryOwner(project.name)}.png?size=96`}
                   sx={{
                     bgcolor: "action.selected",
@@ -91,11 +93,10 @@ export default function CommunitySection({ projects }: CommunitySectionProps) {
         </Box>
         <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
           <Button
-            component="a"
+            component={Link}
             endIcon={<ArrowForwardRounded />}
-            href="https://github.com/langningchen?tab=overview"
-            rel="noreferrer"
-            target="_blank"
+            href="/community"
+            prefetch
           >
             {t("viewMore")}
           </Button>

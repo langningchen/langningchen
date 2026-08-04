@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "More open-source projects by Langning Chen.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ProjectsPage() {
   const github = await getGitHubData();
 

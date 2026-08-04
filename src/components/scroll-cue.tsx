@@ -3,7 +3,11 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTranslations } from "next-intl";
 
-export default function ScrollCue() {
+interface ScrollCueProps {
+  lightMode: boolean;
+}
+
+export default function ScrollCue({ lightMode }: ScrollCueProps) {
   const t = useTranslations("hero");
 
   return (
@@ -13,7 +17,12 @@ export default function ScrollCue() {
       component="a"
       href="#work"
       spacing={0.25}
-      sx={{ alignItems: "center", color: "inherit", textDecoration: "none" }}
+      sx={{
+        alignItems: "center",
+        color: lightMode ? "rgba(23,32,27,0.76)" : "rgba(245,246,240,0.78)",
+        textDecoration: "none",
+        "&:hover": { color: lightMode ? "#205f48" : "#87dbac" },
+      }}
     >
       <Typography className="mono" sx={{ fontSize: 11, fontWeight: 700 }}>
         {t("scrollCue")}

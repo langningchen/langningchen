@@ -17,6 +17,7 @@ import type { PaletteMode } from "@mui/material";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { Language } from "@/i18n/config";
+import { useLenisScrollLock } from "@/hooks/use-lenis-scroll-lock";
 import LanguageToggle from "./language-toggle";
 import NavigationLinks from "./navigation-links";
 
@@ -33,6 +34,8 @@ export default function SiteHeader(props: SiteHeaderProps) {
   const tNav = useTranslations("nav");
   const tTheme = useTranslations("theme");
   const { homeSections = true, language, mode, onLanguageChange, onModeChange } = props;
+  const darkMode = mode === "dark";
+  useLenisScrollLock(drawerOpen);
 
   return (
     <AppBar
@@ -40,9 +43,9 @@ export default function SiteHeader(props: SiteHeaderProps) {
       elevation={0}
       position="fixed"
       sx={{
-        bgcolor: "rgba(10,11,13,0.78)",
-        borderBottom: "1px solid rgba(255,255,255,0.13)",
-        color: "#f5f6f0",
+        bgcolor: darkMode ? "rgba(10,11,13,0.82)" : "rgba(248,251,249,0.88)",
+        borderBottom: `1px solid ${darkMode ? "rgba(255,255,255,0.13)" : "rgba(20,22,18,0.14)"}`,
+        color: darkMode ? "#f5f6f0" : "#17201b",
         backdropFilter: "blur(18px)",
       }}
     >
@@ -54,7 +57,7 @@ export default function SiteHeader(props: SiteHeaderProps) {
             href="/"
             sx={{ color: "inherit", fontSize: { xs: 17, sm: 20 }, fontWeight: 800, textDecoration: "none" }}
           >
-            Langning <Box component="span" sx={{ color: "#87dbac" }}>Chen</Box>
+            Langning <Box component="span" sx={{ color: darkMode ? "#87dbac" : "#287356" }}>Chen</Box>
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", lg: "block" } }}>

@@ -1,4 +1,6 @@
 import { getInstallCount } from "./marketplace";
+import { RUNTIME_FALLBACK } from "./runtime-fallback";
+import { fetchFromServer } from "./server-fetch";
 
 const MARKETPLACE_API =
   "https://marketplace.visualstudio.com/_apis/public/gallery/extensionquery";
@@ -8,23 +10,20 @@ const QUERY = {
   ],
   flags: 914,
 };
-const FALLBACK_INSTALL_COUNT = 14703;
-
 export async function getMarketplaceInstallCount(): Promise<number> {
   try {
-    const response = await fetch(MARKETPLACE_API, {
+    const response = await fetchFromServer(MARKETPLACE_API, {
       body: JSON.stringify(QUERY),
       headers: {
         Accept: "application/json;api-version=7.2-preview.1",
         "Content-Type": "application/json",
       },
       method: "POST",
-      next: { revalidate: 3600 },
     });
-    if (!response.ok) return FALLBACK_INSTALL_COUNT;
+    if (!response.ok) return RUNTIME_FALLBACK.installCount;
 
-    return getInstallCount(await response.json()) ?? FALLBACK_INSTALL_COUNT;
+    return getInstallCount(await response.json()) ?? RUNTIME_FALLBACK.installCount;
   } catch {
-    return FALLBACK_INSTALL_COUNT;
+    return RUNTIME_FALLBACK.installCount;
   }
 }

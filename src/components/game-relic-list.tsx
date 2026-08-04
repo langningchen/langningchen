@@ -3,9 +3,10 @@ import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
 import { useFormatter, useMessages, useTranslations } from "next-intl";
 import type { GameId, GameRelic, GameRelicStat } from "@/lib/game-types";
+import GameStatIcon from "./game-stat-icon";
+import Image from "./progressive-image";
 
 interface GameRelicListProps {
   game: GameId;
@@ -30,9 +31,6 @@ export default function GameRelicList({ game, relics }: GameRelicListProps) {
   const setName = (setId: string) => {
     return relicSets[game][setId] ?? t("relicSetFallback", { id: setId });
   };
-  const statLabel = (stat: GameRelicStat) => {
-    return relicStats[stat.key] ?? relicStats.other;
-  };
   const statValue = (stat: GameRelicStat) => {
     const maximumFractionDigits = stat.percentage || stat.key === "speed" ? 1 : 0;
     return `${format.number(stat.value, { maximumFractionDigits })}${stat.percentage ? "%" : ""}`;
@@ -44,7 +42,7 @@ export default function GameRelicList({ game, relics }: GameRelicListProps) {
       <Typography color="text.secondary" variant="overline">
         {t(game === "genshin" ? "artifacts" : "equippedRelics")}
       </Typography>
-      <Stack direction="row" sx={{ flexWrap: "wrap", gap: 0.75, mt: 1.25 }}>
+      <Stack direction="row" sx={{ flexWrap: "wrap", gap: 0.75, mt: 0.75 }}>
         {setCounts.map(([setId, count]) => (
           <Chip key={setId} label={`${setName(setId)} · ${t("pieceCount", { count })}`} size="small" variant="outlined" />
         ))}
@@ -52,32 +50,55 @@ export default function GameRelicList({ game, relics }: GameRelicListProps) {
       <Box
         sx={{
           display: "grid",
-          gap: 1.5,
+          gap: 0.75,
           gridTemplateColumns: { xs: "1fr", sm: "repeat(2, minmax(0, 1fr))" },
-          mt: 2,
+          mt: 1,
         }}
       >
         {relics.map((relic) => (
           <Box
             key={`${relic.slot}-${relic.id}`}
             sx={{
-              border: "1px solid var(--game-line)",
+              borderTop: "1px solid var(--game-line)",
               display: "grid",
-              gridTemplateColumns: "72px minmax(0, 1fr)",
+              gridTemplateColumns: "88px minmax(0, 1fr)",
               minWidth: 0,
-              p: 1.5,
+              py: 0.75,
             }}
           >
             <Box
               sx={{
                 alignSelf: "start",
-                bgcolor: game === "genshin" ? "#334b47" : "#142535",
-                height: 64,
+                bgcolor: "transparent",
+                height: 82,
+                overflow: "hidden",
                 position: "relative",
-                width: 64,
+                width: 82,
               }}
             >
-              <Image alt="" fill sizes="64px" src={relic.icon} style={{ objectFit: "contain", padding: 4 }} />
+              <Image
+                alt=""
+                fill
+                sizes="82px"
+                src={relic.icon}
+                style={{ objectFit: "contain" }}
+              />
+              <Stack
+                direction="row"
+                sx={{
+                  alignItems: "center",
+                  bgcolor: "background.paper",
+                  bottom: 0,
+                  color: "var(--game-accent)",
+                  gap: 0.1,
+                  px: 0.35,
+                  position: "absolute",
+                  right: 0,
+                }}
+              >
+                <StarRounded sx={{ fontSize: 12 }} />
+                <Typography className="game-mono" sx={{ fontSize: 10 }}>{relic.rarity}</Typography>
+              </Stack>
             </Box>
             <Box sx={{ minWidth: 0 }}>
               <Stack direction="row" spacing={1} sx={{ alignItems: "center", justifyContent: "space-between" }}>
@@ -91,26 +112,33 @@ export default function GameRelicList({ game, relics }: GameRelicListProps) {
               <Typography noWrap sx={{ fontSize: 13, fontWeight: 750, mt: 0.25 }} title={setName(relic.setId)}>
                 {setName(relic.setId)}
               </Typography>
-              <Stack direction="row" sx={{ alignItems: "center", color: "primary.main", mt: 1 }}>
-                <Typography sx={{ fontSize: 12, flexGrow: 1 }}>{statLabel(relic.mainStat)}</Typography>
-                <Typography className="game-mono" sx={{ fontSize: 18, fontWeight: 800 }}>
+              <Stack
+                direction="row"
+                spacing={0.45}
+                sx={{ alignItems: "center", color: "text.primary", mt: 0.55 }}
+                title={relicStats[relic.mainStat.key] ?? relicStats.other}
+              >
+                <GameStatIcon game={game} size={17} statKey={relic.mainStat.key} />
+                <Typography className="game-mono" sx={{ fontSize: 17, fontWeight: 800 }}>
                   {statValue(relic.mainStat)}
                 </Typography>
               </Stack>
-              <Stack spacing={0.3} sx={{ borderTop: "1px solid var(--game-line)", mt: 1, pt: 1 }}>
+              <Box sx={{ display: "grid", gap: 0.35, gridTemplateColumns: "repeat(2, minmax(0, 1fr))", mt: 0.55 }}>
                 {relic.substats.map((stat, index) => (
-                  <Stack direction="row" key={`${stat.key}-${index}`} sx={{ justifyContent: "space-between" }}>
-                    <Typography color="text.secondary" variant="caption">{statLabel(stat)}</Typography>
-                    <Typography className="game-mono" color="text.secondary" variant="caption">
+                  <Stack
+                    direction="row"
+                    key={`${stat.key}-${index}`}
+                    spacing={0.35}
+                    sx={{ alignItems: "center", minWidth: 0 }}
+                    title={relicStats[stat.key] ?? relicStats.other}
+                  >
+                    <GameStatIcon game={game} size={12} statKey={stat.key} />
+                    <Typography className="game-mono" color="text.secondary" noWrap sx={{ fontSize: 11 }}>
                       {statValue(stat)}
                     </Typography>
                   </Stack>
                 ))}
-              </Stack>
-              <Stack direction="row" spacing={0.25} sx={{ alignItems: "center", color: "primary.main", mt: 1 }}>
-                <StarRounded sx={{ fontSize: 14 }} />
-                <Typography className="game-mono" variant="caption">{relic.rarity}</Typography>
-              </Stack>
+              </Box>
             </Box>
           </Box>
         ))}

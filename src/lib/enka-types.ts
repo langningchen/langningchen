@@ -12,10 +12,11 @@ export interface EnkaGenshinEquipItem {
     reliquaryMainstat?: EnkaGenshinStat;
     reliquarySubstats?: EnkaGenshinStat[];
     setId?: number;
+    weaponStats?: EnkaGenshinStat[];
   };
   itemId?: number;
   reliquary?: { level?: number };
-  weapon?: { affixMap?: Record<string, number>; level?: number };
+  weapon?: { affixMap?: Record<string, number>; level?: number; promoteLevel?: number };
 }
 
 export interface GenshinResponse {

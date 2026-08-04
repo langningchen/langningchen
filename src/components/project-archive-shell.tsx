@@ -15,6 +15,8 @@ import ProjectDetailsDrawer from "./project-details-drawer";
 import ScrollReveal from "./scroll-reveal";
 import SectionHeading from "./section-heading";
 import SiteFooter from "./site-footer";
+import SubpageBackLink from "./subpage-back-link";
+import SubpageEntrance from "./subpage-entrance";
 
 interface ProjectArchiveShellProps {
   details: ProjectDetailsMap;
@@ -23,14 +25,16 @@ interface ProjectArchiveShellProps {
 
 export default function ProjectArchiveShell({ details, repositories }: ProjectArchiveShellProps) {
   const t = useTranslations("projectArchive");
+  const tNav = useTranslations("nav");
   const [selectedRepository, setSelectedRepository] = useState<GitHubRepository | null>(null);
 
   return (
-    <>
+    <SubpageEntrance variant="projects">
       <Box component="main" sx={{ pt: { xs: "64px", md: "72px" } }}>
         <Box className="reveal-section" component="section" sx={{ py: { xs: 9, md: 12 } }}>
           <ScrollReveal>
             <Container maxWidth="xl">
+              <SubpageBackLink label={tNav("backHome")} />
               <SectionHeading description={t("description")} eyebrow={t("eyebrow")} title={t("title")} />
               <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "repeat(12, 1fr)" } }}>
                 {repositories.map((repository, index) => (
@@ -56,6 +60,6 @@ export default function ProjectArchiveShell({ details, repositories }: ProjectAr
         </Box>
       </Box>
       <SiteFooter />
-    </>
+    </SubpageEntrance>
   );
 }

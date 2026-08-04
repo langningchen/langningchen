@@ -20,16 +20,16 @@ export default function LanguageToggle({
       size="small"
       value={language}
       sx={{
-        bgcolor: "rgba(255,255,255,0.08)",
+        bgcolor: "action.hover",
         "& .MuiToggleButton-root": {
-          borderColor: "rgba(255,255,255,0.2)",
-          color: "rgba(255,255,255,0.72)",
+          borderColor: "divider",
+          color: "text.secondary",
           height: 36,
           px: 1.25,
         },
-        "& .Mui-selected": {
-          bgcolor: "#f4f5ef !important",
-          color: "#11130f !important",
+        "& .MuiToggleButton-root.Mui-selected": {
+          bgcolor: "primary.main !important",
+          color: "primary.contrastText !important",
         },
       }}
     >

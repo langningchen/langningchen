@@ -11,6 +11,14 @@ export interface GameEquipment {
   level: number;
   name: LocalizedGameText;
   rank?: number;
+  rarity?: number;
+  stats?: GameEquipmentStat[];
+}
+
+export interface GameEquipmentStat {
+  key: string;
+  percentage: boolean;
+  value: number;
 }
 
 export interface GameSkill {
@@ -38,6 +46,25 @@ export interface GameRelic {
   substats: GameRelicStat[];
 }
 
+export interface GameCharacterStat {
+  key: string;
+  percentage: boolean;
+  value: number;
+}
+
+export type GameTraceKind = "core" | "extra" | "major" | "minor";
+
+export interface GameTraceNode {
+  icon: string;
+  id: string;
+  kind: GameTraceKind;
+  level: number;
+  maxLevel: number;
+  name?: LocalizedGameText;
+  parent?: string;
+  type?: LocalizedGameText;
+}
+
 export interface GameCharacterDetails {
   attack?: number;
   critDamage?: number;
@@ -47,8 +74,11 @@ export interface GameCharacterDetails {
   friendship?: number;
   hp?: number;
   rank: number;
+  rankIcons?: string[];
   relics: GameRelic[];
   skills: GameSkill[];
+  totalStats?: GameCharacterStat[];
+  traceNodes?: GameTraceNode[];
 }
 
 export interface GameCharacter {

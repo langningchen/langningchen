@@ -17,6 +17,7 @@ export const STAR_RAIL_RELIC_SLOTS: Record<number, string> = {
 
 export const GENSHIN_RELIC_STATS: Record<string, string> = {
   FIGHT_PROP_ATTACK: "attack",
+  FIGHT_PROP_BASE_ATTACK: "baseAttack",
   FIGHT_PROP_ATTACK_PERCENT: "attackPercent",
   FIGHT_PROP_CHARGE_EFFICIENCY: "energyRecharge",
   FIGHT_PROP_CRITICAL: "critRate",

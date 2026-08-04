@@ -1,32 +1,47 @@
 import Box from "@mui/material/Box";
-import Image from "next/image";
-import type { GameCharacter, GameId } from "@/lib/game-types";
+import type { GameCharacter } from "@/lib/game-types";
+import Image from "./progressive-image";
 
 interface GameCharacterArtProps {
   character: GameCharacter;
-  game: GameId;
-  name: string;
 }
 
-export default function GameCharacterArt({ character, game, name }: GameCharacterArtProps) {
+export default function GameCharacterArt({ character }: GameCharacterArtProps) {
   return (
     <Box
+      aria-hidden="true"
       sx={{
-        aspectRatio: game === "genshin" ? "2 / 1" : "16 / 10",
-        bgcolor: "var(--game-portrait)",
-        minHeight: { xs: 240, sm: game === "genshin" ? 320 : 400 },
+        bgcolor: "transparent",
+        inset: 0,
+        opacity: 0.72,
         overflow: "hidden",
-        position: "relative",
+        pointerEvents: "none",
+        position: "absolute",
       }}
     >
-      <Image
-        alt={name}
-        fill
-        priority
-        sizes="(max-width: 600px) 94vw, 760px"
-        src={character.splashImage}
-        style={{ objectFit: "contain", objectPosition: "center bottom" }}
-      />
+      <Box
+        sx={{
+          bottom: 0,
+          left: { xs: "18%", sm: "29%" },
+          position: "absolute",
+          right: { xs: "-18%", sm: "-29%" },
+          top: 0,
+        }}
+      >
+        <Image
+          alt=""
+          fill
+          priority
+          sizes="(max-width: 600px) 94vw, 760px"
+          src={character.splashImage}
+          style={{
+            objectFit: "contain",
+            objectPosition: "center bottom",
+            transform: "scale(1.08)",
+            transformOrigin: "center bottom",
+          }}
+        />
+      </Box>
     </Box>
   );
 }

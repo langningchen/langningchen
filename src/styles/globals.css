@@ -73,6 +73,64 @@ body {
   min-height: 100vh;
 }
 
+.initial-loader {
+  align-items: center;
+  clip-path: inset(0 0 0 0);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  overflow: hidden;
+  position: fixed;
+  z-index: 2000;
+}
+
+.initial-loader__content {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 32px;
+  width: min(320px, 84vw);
+}
+
+.initial-loader__avatar-frame {
+  height: 72px;
+  position: relative;
+  width: 72px;
+}
+
+.initial-loader__avatar {
+  border-radius: 50%;
+  display: block;
+  height: 72px;
+  object-fit: cover;
+  position: relative;
+  width: 72px;
+  z-index: 1;
+}
+
+.initial-loader__pulse {
+  animation: initial-loader-pulse 1.35s ease-in-out infinite;
+  border: 1px solid;
+  border-radius: 50%;
+  inset: -8px;
+  position: absolute;
+}
+
+.initial-loader__progress {
+  height: 2px;
+  overflow: hidden;
+  width: 100%;
+}
+
+.initial-loader__progress > span {
+  display: block;
+  height: 100%;
+  transition: transform 180ms ease-out;
+  transform-origin: left center;
+  width: 100%;
+}
+
 a {
   color: inherit;
 }
@@ -104,6 +162,7 @@ a {
   --game-glyph: #7b6238;
   --game-hero: #dfece7;
   --game-line: rgba(255, 255, 255, 0.2);
+  --game-icon-surface: #263d38;
   --game-portrait: #d6e5df;
   --game-showcase: #eaf2ef;
   --game-stats: #f7faf8;
@@ -122,6 +181,7 @@ a {
   --game-glyph: #78dcff;
   --game-hero: #111a26;
   --game-line: rgba(120, 220, 255, 0.2);
+  --game-icon-surface: #09131f;
   --game-portrait: #1b2937;
   --game-showcase: #131d29;
   --game-stats: #0b111a;
@@ -134,6 +194,7 @@ a {
   --game-glyph: #e2c77e;
   --game-hero: #101713;
   --game-line: rgba(214, 185, 111, 0.2);
+  --game-icon-surface: #17231d;
   --game-portrait: #202c26;
   --game-showcase: #111914;
   --game-stats: #18211d;
@@ -146,9 +207,15 @@ a {
   --game-glyph: #287f9d;
   --game-hero: #e5eef2;
   --game-line: rgba(40, 127, 157, 0.2);
+  --game-icon-surface: #263c48;
   --game-portrait: #dce9ee;
   --game-showcase: #edf3f5;
   --game-stats: #f8fafb;
+}
+
+.game-stat-icon * {
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }
 
 .game-page--starRail section:first-child {
@@ -224,22 +291,113 @@ a {
 
 .scroll-cue {
   animation: scroll-cue 1.8s ease-in-out infinite;
-  color: rgba(245, 246, 240, 0.78);
-}
-
-.scroll-cue:hover {
-  color: #87dbac;
 }
 
 main > .reveal-section {
+  display: flex;
   min-height: calc(100svh - 64px);
 }
 
 main > .reveal-section > div {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   justify-content: center;
-  min-height: inherit;
+  min-height: 0;
+  width: 100%;
+}
+
+.subpage-entrance {
+  min-height: 100vh;
+  position: relative;
+}
+
+.subpage-entrance__veil {
+  inset: 64px 0 0;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  transform-origin: inherit;
+  z-index: 1090;
+}
+
+.subpage-entrance__frame {
+  aspect-ratio: 1;
+  border: 1px solid;
+  display: block;
+  left: calc(50% - 80px);
+  position: absolute;
+  top: calc(50% - 80px);
+  transform: rotate(45deg);
+  width: 160px;
+}
+
+.subpage-entrance__line {
+  display: block;
+  height: 3px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 50%;
+}
+
+.subpage-loading {
+  min-height: 100svh;
+  padding-top: 64px;
+}
+
+.subpage-loading__stage {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  justify-content: center;
+  min-height: calc(100svh - 64px);
+  overflow: hidden;
+  padding: 32px;
+  position: relative;
+}
+
+.subpage-loading__frame {
+  animation: subpage-frame-spin 850ms linear infinite;
+  aspect-ratio: 1;
+  border: 2px solid;
+  border-radius: 4px;
+  position: relative;
+  width: 52px;
+}
+
+.subpage-loading__frame::after {
+  background: currentColor;
+  content: "";
+  height: 7px;
+  position: absolute;
+  right: -4px;
+  top: -4px;
+  width: 7px;
+}
+
+.subpage-loading__rail {
+  height: 2px;
+  overflow: hidden;
+  position: relative;
+  width: min(280px, 72vw);
+}
+
+.subpage-loading__rail > span {
+  animation: subpage-rail-progress 900ms ease-in-out infinite;
+  display: block;
+  height: 100%;
+  transform: translateX(-110%);
+  width: 38%;
+}
+
+.subpage-loading--genshin {
+  font-family: "Genshin UI", sans-serif;
+}
+
+.subpage-loading--starRail {
+  font-family: "Star Rail UI", sans-serif;
 }
 
 @media (min-width: 900px) {
@@ -250,12 +408,38 @@ main > .reveal-section > div {
   main > .reveal-section {
     min-height: calc(100svh - 72px);
   }
+
+  .subpage-entrance__veil {
+    inset-block-start: 72px;
+  }
+
+  .subpage-loading {
+    padding-top: 72px;
+  }
+
+  .subpage-loading__stage {
+    min-height: calc(100svh - 72px);
+  }
 }
 
 .carousel-image {
-  animation: carousel-reveal 520ms ease both;
   filter: brightness(1.08) saturate(1.03);
   object-fit: cover;
+  opacity: 0;
+  transform: scale(1.018);
+  transition: opacity 520ms ease, transform 720ms ease;
+  z-index: 0;
+}
+
+.carousel-image--previous {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.carousel-image--active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 1;
 }
 
 .terminal-line {
@@ -271,13 +455,22 @@ main > .reveal-section > div {
   margin-left: 3px;
 }
 
-@keyframes carousel-reveal {
-  from { opacity: 0.35; transform: scale(1.025); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 @keyframes terminal-cursor {
   50% { opacity: 0; }
+}
+
+@keyframes initial-loader-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.94); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes subpage-frame-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes subpage-rail-progress {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(375%); }
 }
 
 @keyframes scroll-cue {
@@ -290,9 +483,9 @@ main > .reveal-section > div {
 }
 
 .project-image--interface {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  transform: scale(1.02);
+  transform: none;
 }
 
 .project-image--crop {
@@ -302,7 +495,7 @@ main > .reveal-section > div {
 }
 
 .project-card:hover .project-image--interface {
-  transform: scale(1.04);
+  transform: scale(1.015);
 }
 
 .project-card:hover .project-image--crop {
@@ -323,10 +516,17 @@ main > .reveal-section > div {
   }
 
   .carousel-image,
+  .initial-loader__pulse,
   .scroll-cue,
+  .subpage-loading__frame,
+  .subpage-loading__rail > span,
   .terminal-cursor,
   .terminal-line {
     animation: none;
     clip-path: none;
+  }
+
+  .carousel-image {
+    transition: none;
   }
 }

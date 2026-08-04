@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "LangningChen's public Honkai: Star Rail profile.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function StarRailPage() {
   const profile = await getStarRailProfile();
   return <GamePageShell profile={profile} />;

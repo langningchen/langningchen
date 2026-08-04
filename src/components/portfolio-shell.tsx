@@ -2,7 +2,7 @@
 
 import Box from "@mui/material/Box";
 import type { ContributionCalendarData } from "@/lib/contribution-calendar";
-import type { ContributionProject } from "@/lib/contributions";
+import type { CommunityData } from "@/lib/contributions";
 import type { GitHubData } from "@/lib/github-server";
 import type { WakaTimeData } from "@/lib/wakatime";
 import GitHubPulseSection from "./github-pulse-section";
@@ -18,7 +18,7 @@ import ToolkitSection from "./toolkit-section";
 
 interface PortfolioShellProps {
   calendar: ContributionCalendarData;
-  community: ContributionProject[];
+  community: CommunityData;
   github: GitHubData;
   installCount: number;
   wakaTime: WakaTimeData;
@@ -47,7 +47,7 @@ export default function PortfolioShell({
           totalStars={github.totalStars}
           wakaTime={wakaTime}
         />
-        <CommunitySection projects={community} />
+        <CommunitySection projects={community.projects.slice(0, 10)} />
         <ToolkitSection />
         <OiSection />
         <GamePortalSection />

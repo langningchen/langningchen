@@ -30,7 +30,12 @@ export default function GitHubProfileCard({ profile }: GitHubProfileCardProps) {
       }}
     >
       <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-        <Avatar alt="" src={profile.avatar_url} sx={{ height: 56, width: 56 }} />
+        <Avatar
+          alt=""
+          slotProps={{ img: { decoding: "async", loading: "lazy" } }}
+          src={profile.avatar_url}
+          sx={{ bgcolor: "action.selected", height: 56, width: 56 }}
+        />
         <Box>
           <Typography className="mono" color="primary.main" variant="overline">
             {t("profileLabel")}

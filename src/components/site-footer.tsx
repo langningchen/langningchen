@@ -15,8 +15,8 @@ export default function SiteFooter() {
       id="contact"
       sx={{
         alignItems: "center",
-        bgcolor: "#0a0b0d",
-        color: "#f4f5ef",
+        bgcolor: "background.default",
+        color: "text.primary",
         display: "flex",
         minHeight: { md: "calc(100svh - 72px)" },
         py: { xs: 8, md: 11 },
@@ -28,10 +28,14 @@ export default function SiteFooter() {
             <Typography className="mono" color="primary.main" variant="overline">
               i@langningchen.com
             </Typography>
-            <Typography component="h2" sx={{ fontSize: { xs: 38, md: 58 }, lineHeight: 1.05, my: 2 }} variant="h2">
+            <Typography
+              component="h2"
+              sx={{ fontSize: { xs: 38, md: 58 }, lineHeight: 1.05, my: 2 }}
+              variant="h2"
+            >
               {t("title")}
             </Typography>
-            <Typography sx={{ color: "rgba(244,245,239,0.65)", fontSize: 17, lineHeight: 1.7, maxWidth: 650 }}>
+            <Typography color="text.secondary" sx={{ fontSize: 17, lineHeight: 1.7, maxWidth: 650 }}>
               {t("description")}
             </Typography>
           </Box>
@@ -46,9 +50,9 @@ export default function SiteFooter() {
             {t("email")}
           </Button>
         </Stack>
-        <Box sx={{ borderTop: "1px solid rgba(255,255,255,0.14)", mt: 8, pt: 3 }}>
+        <Box sx={{ borderTop: 1, borderColor: "divider", mt: 8, pt: 3 }}>
           <Stack direction="row" spacing={2} sx={{ alignItems: "center", justifyContent: "space-between" }}>
-            <Typography className="mono" sx={{ color: "rgba(244,245,239,0.55)", fontSize: 13 }}>
+            <Typography className="mono" color="text.secondary" sx={{ fontSize: 13 }}>
               © {new Date().getFullYear()} Langning Chen · {t("note")}
             </Typography>
             <SocialLinks />

@@ -10,6 +10,7 @@ import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { useTranslations } from "next-intl";
+import { useLenisScrollLock } from "@/hooks/use-lenis-scroll-lock";
 import type { GitHubRepository } from "@/lib/github";
 import { repositoryFullName } from "@/lib/github";
 import type { ProjectDetailsData } from "@/lib/project-details";
@@ -31,6 +32,8 @@ export default function ProjectDetailsDrawer({
   repository,
 }: ProjectDetailsDrawerProps) {
   const t = useTranslations("projectDetails");
+  const hasRecentActivity = details.activity.some((value) => value > 0);
+  useLenisScrollLock(repository !== null);
 
   return (
     <Drawer
@@ -79,10 +82,14 @@ export default function ProjectDetailsDrawer({
             <Typography component="h3" sx={{ mb: 2 }} variant="h6">
               {t("activity")}
             </Typography>
-            <ActivitySparkline values={details.activity} />
-            <Typography color="text.secondary" variant="body2">
-              {t("activityCaption")}
-            </Typography>
+            {hasRecentActivity ? (
+              <ActivitySparkline
+                startDate={details.activityStartDate}
+                values={details.activity}
+              />
+            ) : (
+              <Typography color="text.secondary">{t("noActivity")}</Typography>
+            )}
           </Box>
           <Box>
             <Typography component="h3" sx={{ mb: 2 }} variant="h6">
@@ -101,6 +108,7 @@ export default function ProjectDetailsDrawer({
                     alt={contributor.login}
                     component="a"
                     href={contributor.html_url}
+                    slotProps={{ img: { decoding: "async", loading: "lazy" } }}
                     src={contributor.avatar_url}
                     sx={{ height: 42, width: 42 }}
                   />
@@ -122,7 +130,7 @@ export default function ProjectDetailsDrawer({
             rel="noreferrer"
             startIcon={<GitHub />}
             target="_blank"
-            variant="contained"
+            variant="outlined"
           >
             {t("openGitHub")}
           </Button>

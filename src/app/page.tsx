@@ -5,12 +5,14 @@ import { getGitHubData } from "@/lib/github-server";
 import { getMarketplaceInstallCount } from "@/lib/marketplace-server";
 import { getWakaTimeData } from "@/lib/wakatime-server";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [calendar, community, github, installCount, wakaTime] =
     await Promise.all([
       getContributionCalendar(),
       getCommunityData(),
-      getGitHubData(),
+      getGitHubData(2),
       getMarketplaceInstallCount(),
       getWakaTimeData(),
     ]);

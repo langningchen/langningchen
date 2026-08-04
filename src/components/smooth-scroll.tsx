@@ -23,10 +23,10 @@ export default function SmoothScroll() {
       options={{
         anchors: { offset: 0 },
         autoRaf: true,
-        lerp: 0.075,
+        lerp: 0.24,
         smoothWheel: true,
         stopInertiaOnNavigate: true,
-        wheelMultiplier: 0.92,
+        wheelMultiplier: 1.08,
       }}
       root
     >

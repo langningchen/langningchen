@@ -12,9 +12,17 @@
   "type": "module",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "pnpm refresh:data && pnpm crop:game-assets",
     "build": "next build",
+    "build:worker": "opennextjs-cloudflare build",
+    "cache:game-icons": "tsx scripts/cache-game-stat-icons.ts",
+    "crop:game-assets": "tsx scripts/crop-game-assets.ts",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "deploy": "pnpm build:worker && opennextjs-cloudflare deploy -- --keep-vars",
     "lint": "eslint .",
-    "preview": "wrangler pages dev out"
+    "preview": "pnpm build:worker && opennextjs-cloudflare preview",
+    "refresh:data": "tsx scripts/refresh-runtime-fallback.ts",
+    "upload": "pnpm build:worker && opennextjs-cloudflare upload -- --keep-vars"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -27,17 +35,21 @@
     "motion": "^12.43.0",
     "next": "^16.2.12",
     "next-intl": "^4.13.4",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "simple-icons": "^16.28.0"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "eslint": "^9.39.4",
+    "@cloudflare/workers-types": "^5.20260801.1",
+    "@opennextjs/cloudflare": "^1.20.2",
+    "@types/node": "^26.1.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "eslint": "^9.39.5",
     "eslint-config-next": "^16.2.12",
-    "typescript": "~5.9.3",
-    "wrangler": "^4.77.0"
+    "sharp": "0.34.5",
+    "tsx": "^4.23.4",
+    "typescript": "~6.0.3",
+    "wrangler": "^4.118.0"
   }
 }

@@ -29,7 +29,7 @@ function genshinRelicIcon(icon: string, setId: string): string {
 
 function starRailRelicIcon(setId: string, slot: number): string {
   return CACHED_STAR_RAIL_RELIC_SETS.has(setId)
-    ? `/games/relics/starrail-${setId}-${slot}.webp`
+    ? `/games/relics/cropped/starrail-${setId}-${slot}.webp`
     : `https://enka.network/ui/hsr/SpriteOutput/ItemIcon/RelicIcons/IconRelic_${setId}_${slot}.png`;
 }
 

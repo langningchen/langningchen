@@ -1,38 +1,85 @@
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useTranslations } from "next-intl";
-import type { GameCharacter, GameId } from "@/lib/game-types";
+import { useMessages, useTranslations } from "next-intl";
+import type {
+  GameCharacter,
+  GameCharacterStat,
+  GameId,
+} from "@/lib/game-types";
 import CountUpValue from "./count-up-value";
+import GameRankTrack from "./game-rank-track";
+import GameStatIcon from "./game-stat-icon";
 
 interface GameCharacterMetricsProps {
   character: GameCharacter;
   game: GameId;
 }
 
+function getLegacyStats(character: GameCharacter): GameCharacterStat[] {
+  const details = character.details;
+  return [
+    details.hp === undefined ? null : { key: "hp", percentage: false, value: details.hp },
+    details.attack === undefined ? null : { key: "attack", percentage: false, value: details.attack },
+    details.defense === undefined ? null : { key: "defense", percentage: false, value: details.defense },
+    details.critRate === undefined ? null : { key: "critRate", percentage: true, value: details.critRate },
+    details.critDamage === undefined ? null : { key: "critDamage", percentage: true, value: details.critDamage },
+  ].filter((stat): stat is GameCharacterStat => stat !== null);
+}
+
 export default function GameCharacterMetrics({ character, game }: GameCharacterMetricsProps) {
+  const messages = useMessages();
   const t = useTranslations("games");
   const details = character.details;
-  const metrics = [
-    { label: t("levelShort"), value: character.level },
-    { label: t(game === "genshin" ? "constellation" : "eidolon"), value: details.rank },
-    details.friendship === undefined ? null : { label: t("friendshipLevel"), value: details.friendship },
-    details.hp === undefined ? null : { label: t("hp"), value: Math.round(details.hp) },
-    details.attack === undefined ? null : { label: t("attack"), value: Math.round(details.attack) },
-    details.defense === undefined ? null : { label: t("defense"), value: Math.round(details.defense) },
-    details.critRate === undefined ? null : { decimals: 1, label: t("critRate"), suffix: "%", value: details.critRate },
-    details.critDamage === undefined ? null : { decimals: 1, label: t("critDamage"), suffix: "%", value: details.critDamage },
-  ].filter((metric): metric is NonNullable<typeof metric> => metric !== null);
+  const stats = details.totalStats?.length ? details.totalStats : getLegacyStats(character);
+  const statLabels = messages.games.relicStats as Record<string, string>;
 
   return (
-    <Box sx={{ borderBlock: "1px solid var(--game-line)", display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}>
-      {metrics.map((metric) => (
-        <Box key={metric.label} sx={{ minWidth: 0, py: 1.75 }}>
-          <Typography color="text.secondary" variant="caption">{metric.label}</Typography>
-          <Typography className="game-mono" sx={{ fontSize: 22, fontWeight: 800, mt: 0.25 }}>
-            <CountUpValue decimals={metric.decimals} suffix={metric.suffix} value={metric.value} />
+    <Stack spacing={1.5}>
+      <GameRankTrack
+        characterId={character.id}
+        game={game}
+        icons={details.rankIcons}
+        rank={details.rank}
+      />
+
+      {stats.length > 0 && (
+        <Box>
+          <Typography color="text.secondary" variant="overline">
+            {t("totalStats")}
           </Typography>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+              mt: 0.5,
+            }}
+          >
+            {stats.map((stat) => (
+              <Box
+                key={stat.key}
+                sx={{ borderTop: "1px solid var(--game-line)", minWidth: 0, py: 0.65, pr: 1 }}
+              >
+                <Stack direction="row" spacing={0.6} sx={{ alignItems: "center", justifyContent: "space-between", minHeight: 24 }}>
+                  <Stack direction="row" spacing={0.5} sx={{ alignItems: "center", minWidth: 0 }}>
+                    <GameStatIcon game={game} size={16} statKey={stat.key} />
+                    <Typography color="text.secondary" noWrap sx={{ lineHeight: 1.2 }} variant="caption">
+                    {statLabels[stat.key] ?? statLabels.other}
+                    </Typography>
+                  </Stack>
+                  <Typography className="game-mono" sx={{ fontSize: 15, fontWeight: 800, whiteSpace: "nowrap" }}>
+                    <CountUpValue
+                      decimals={stat.percentage || stat.key === "speed" ? 1 : 0}
+                      suffix={stat.percentage ? "%" : undefined}
+                      value={stat.value}
+                    />
+                  </Typography>
+                </Stack>
+              </Box>
+            ))}
+          </Box>
         </Box>
-      ))}
-    </Box>
+      )}
+    </Stack>
   );
 }

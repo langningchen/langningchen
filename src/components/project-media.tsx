@@ -1,8 +1,8 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
 import type { ProjectMedia as ProjectMediaData } from "@/lib/github";
+import Image from "./progressive-image";
 
 interface ProjectMediaProps {
   accent: string;
@@ -22,7 +22,15 @@ export default function ProjectMedia({
   }
 
   return (
-    <Box sx={{ aspectRatio: "16 / 9", bgcolor: "#101216", overflow: "hidden", position: "relative" }}>
+    <Box
+      sx={{
+        aspectRatio: "2 / 1",
+        bgcolor: "#101216",
+        minHeight: { xs: 210, sm: 0 },
+        overflow: "hidden",
+        position: "relative",
+      }}
+    >
       <Box sx={{ height: "100%", overflow: "hidden", position: "relative" }}>
         <Image
           alt={media.alt}

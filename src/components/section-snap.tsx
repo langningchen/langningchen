@@ -48,43 +48,20 @@ export default function SectionSnap() {
 
     let snap: Snap | null = null;
     let rebuildTimer = 0;
-    let settleTimer = 0;
-    let snapPoints: number[] = [];
-    const settleAtNearestPoint = () => {
-      if (snapPoints.length === 0) return;
-      const currentScroll = lenis.scroll;
-      const nearestPoint = snapPoints.reduce((nearest, point) =>
-        Math.abs(point - currentScroll) < Math.abs(nearest - currentScroll)
-          ? point
-          : nearest,
-      );
-      if (Math.abs(nearestPoint - currentScroll) < 2) return;
-
-      lenis.scrollTo(nearestPoint, {
-        duration: 0.78,
-        easing: (time) => 1 - (1 - time) ** 4,
-        userData: { initiator: "snap" },
-      });
-    };
-    const scheduleSettle = () => {
-      window.clearTimeout(settleTimer);
-      settleTimer = window.setTimeout(settleAtNearestPoint, 180);
-    };
     const rebuild = () => {
       snap?.destroy();
       snap = null;
-      snapPoints = [];
       const elements = Array.from(document.querySelectorAll<HTMLElement>(SNAP_SELECTOR));
       if (elements.length < 2) return;
 
       snap = new Snap(lenis, {
-        debounce: 130,
-        duration: 0.78,
+        debounce: 72,
+        distanceThreshold: "52%",
+        duration: 0.32,
         easing: (time) => 1 - (1 - time) ** 4,
-        type: "lock",
+        type: "proximity",
       });
-      snapPoints = getSnapPoints(elements);
-      snapPoints.forEach((point) => snap?.add(point));
+      getSnapPoints(elements).forEach((point) => snap?.add(point));
     };
     const scheduleRebuild = () => {
       window.clearTimeout(rebuildTimer);
@@ -94,16 +71,11 @@ export default function SectionSnap() {
     rebuild();
     const resizeObserver = new ResizeObserver(scheduleRebuild);
     resizeObserver.observe(document.body);
-    lenis.on("scroll", scheduleSettle);
     window.addEventListener("resize", scheduleRebuild);
-    window.addEventListener("scroll", scheduleSettle, { passive: true });
 
     return () => {
       window.clearTimeout(rebuildTimer);
-      window.clearTimeout(settleTimer);
-      lenis.off("scroll", scheduleSettle);
       window.removeEventListener("resize", scheduleRebuild);
-      window.removeEventListener("scroll", scheduleSettle);
       resizeObserver.disconnect();
       snap?.destroy();
     };

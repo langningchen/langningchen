@@ -3,10 +3,10 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { Route } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { GameId } from "@/lib/game-types";
+import Image from "./progressive-image";
 
 interface GamePortalPanelProps {
   game: GameId;

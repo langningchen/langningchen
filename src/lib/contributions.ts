@@ -1,8 +1,12 @@
 export interface GitHubSearchItem {
+  created_at: string;
   html_url: string;
+  number: number;
   pull_request?: object;
   repository_url: string;
+  state: "closed" | "open";
   title: string;
+  updated_at: string;
 }
 
 export interface ContributionProject {
@@ -10,6 +14,22 @@ export interface ContributionProject {
   name: string;
   pullRequests: number;
   url: string;
+}
+
+export interface ContributionRecord {
+  createdAt: string;
+  kind: "issue" | "pullRequest";
+  number: number;
+  repository: string;
+  state: "closed" | "open";
+  title: string;
+  updatedAt: string;
+  url: string;
+}
+
+export interface CommunityData {
+  projects: ContributionProject[];
+  records: ContributionRecord[];
 }
 
 const CONTRIBUTION_PRIORITY = [
@@ -68,6 +88,27 @@ export function aggregateContributions(
       const normalizedRight = rightPriority === -1 ? CONTRIBUTION_PRIORITY.length : rightPriority;
       if (normalizedLeft !== normalizedRight) return normalizedLeft - normalizedRight;
       return right.pullRequests + right.issues - left.pullRequests - left.issues;
-    })
-    .slice(0, 10);
+    });
+}
+
+export function collectContributionRecords(
+  pullRequests: GitHubSearchItem[],
+  issues: GitHubSearchItem[],
+): ContributionRecord[] {
+  return [
+    ...pullRequests.map((item) => ({ item, kind: "pullRequest" as const })),
+    ...issues.map((item) => ({ item, kind: "issue" as const })),
+  ]
+    .map(({ item, kind }) => ({
+      createdAt: item.created_at,
+      kind,
+      number: item.number,
+      repository: repositoryName(item.repository_url),
+      state: item.state,
+      title: item.title,
+      updatedAt: item.updated_at,
+      url: item.html_url,
+    }))
+    .filter((record) => !record.repository.startsWith("langningchen/"))
+    .sort((left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt));
 }

@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   description: "LangningChen's public Genshin Impact profile.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function GenshinPage() {
   const profile = await getGenshinProfile();
   return <GamePageShell profile={profile} />;

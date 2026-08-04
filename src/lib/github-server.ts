@@ -1,5 +1,3 @@
-import { FALLBACK_GITHUB_LANGUAGES } from "@/data/fallback-activity";
-import { FALLBACK_PROFILE, FALLBACK_REPOSITORIES } from "@/data/fallback-github";
 import type { GitHubProfile, GitHubRepository, LanguageStat } from "./github";
 import {
   aggregateLanguages,
@@ -8,13 +6,15 @@ import {
 } from "./github";
 import { getProjectDetailsMap } from "./project-details";
 import type { ProjectDetailsMap } from "./project-details";
+import { RUNTIME_FALLBACK } from "./runtime-fallback";
+import { fetchFromServer } from "./server-fetch";
 
 const OWN_REPOSITORIES_URL =
   "https://api.github.com/users/langningchen/repos?per_page=100&sort=updated";
 const PROFILE_URL = "https://api.github.com/users/langningchen";
-const EXTRA_REPOSITORY_URLS = [
-  "https://api.github.com/repos/XMOJ-Script-dev/XMOJ-Script",
-  "https://api.github.com/repos/CYEZOI/OJ",
+const EXTRA_REPOSITORIES = [
+  "XMOJ-Script-dev/XMOJ-Script",
+  "CYEZOI/OJ",
 ];
 
 export interface GitHubData {
@@ -67,21 +67,18 @@ function aggregateProjectLanguages(details: ProjectDetailsMap): LanguageStat[] {
   return aggregateLanguages(languageMaps);
 }
 
-export async function getGitHubData(): Promise<GitHubData> {
+export async function getGitHubData(detailsLimit = 8): Promise<GitHubData> {
   try {
     const responses = await Promise.all([
-      fetch(OWN_REPOSITORIES_URL, {
+      fetchFromServer(OWN_REPOSITORIES_URL, {
         headers: githubHeaders(),
-        next: { revalidate: 3600 },
       }),
-      fetch(PROFILE_URL, {
+      fetchFromServer(PROFILE_URL, {
         headers: githubHeaders(),
-        next: { revalidate: 3600 },
       }),
-      ...EXTRA_REPOSITORY_URLS.map((url) =>
-        fetch(url, {
+      ...EXTRA_REPOSITORIES.map((fullName) =>
+        fetchFromServer(`https://api.github.com/repos/${fullName}`, {
           headers: githubHeaders(),
-          next: { revalidate: 3600 },
         }),
       ),
     ]);
@@ -92,32 +89,38 @@ export async function getGitHubData(): Promise<GitHubData> {
 
     const owned = (await responses[0].json()) as GitHubRepository[];
     const profile = (await responses[1].json()) as GitHubProfile;
-    const extra = await Promise.all(
-      responses
-        .slice(2)
-        .filter((response) => response.ok)
-        .map((response) => response.json() as Promise<GitHubRepository>),
+    const extraResponses = await Promise.all(
+      responses.slice(2).map(async (response, index) => {
+        if (response.ok) return (await response.json()) as GitHubRepository;
+        const fullName = EXTRA_REPOSITORIES[index];
+        return RUNTIME_FALLBACK.github.featured.find(
+          (repository) => repository.full_name === fullName,
+        ) ?? null;
+      }),
+    );
+    const extra = extraResponses.filter(
+      (repository): repository is GitHubRepository => repository !== null,
     );
     const repositories = normalizeRepositories(owned, extra);
     const featured = selectFeaturedRepositories(repositories);
-    const projectDetails = await getProjectDetailsMap(featured);
-    const languages = aggregateProjectLanguages(projectDetails);
+    const projectDetails = await getProjectDetailsMap(
+      featured.slice(0, detailsLimit),
+      RUNTIME_FALLBACK.github.projectDetails,
+    );
+    const languages = aggregateProjectLanguages({
+      ...RUNTIME_FALLBACK.github.projectDetails,
+      ...projectDetails,
+    });
 
     return {
       featured,
       languages:
-        languages.length > 0 ? languages : FALLBACK_GITHUB_LANGUAGES,
+        languages.length > 0 ? languages : RUNTIME_FALLBACK.github.languages,
       profile,
       projectDetails,
       totalStars: sumRepositoryStars(repositories),
     };
   } catch {
-    return {
-      featured: selectFeaturedRepositories(FALLBACK_REPOSITORIES),
-      languages: FALLBACK_GITHUB_LANGUAGES,
-      profile: FALLBACK_PROFILE,
-      projectDetails: {},
-      totalStars: sumRepositoryStars(FALLBACK_REPOSITORIES),
-    };
+    return RUNTIME_FALLBACK.github;
   }
 }

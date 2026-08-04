@@ -1,14 +1,14 @@
-import AutoAwesomeRounded from "@mui/icons-material/AutoAwesomeRounded";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { GAME_GLYPH_COPY } from "@/data/game-glyph-copy";
 import type { GameProfile } from "@/lib/game-data";
+import GameDataRefreshButton from "./game-data-refresh-button";
+import Image from "./progressive-image";
+import SubpageBackLink from "./subpage-back-link";
 
 interface GameHeroProps {
   profile: GameProfile;
@@ -16,6 +16,7 @@ interface GameHeroProps {
 
 export default function GameHero({ profile }: GameHeroProps) {
   const t = useTranslations("games");
+  const tNav = useTranslations("nav");
   const theme = useTheme();
   const isGenshin = profile.game === "genshin";
   const usesLightForeground = isGenshin || theme.palette.mode === "dark";
@@ -75,11 +76,7 @@ export default function GameHero({ profile }: GameHeroProps) {
         }}
       >
         <Box sx={{ maxWidth: 780, py: { xs: 8, md: 10 }, position: "relative", zIndex: 2 }}>
-          <Chip
-            icon={<AutoAwesomeRounded />}
-            label={t("profile")}
-            sx={{ bgcolor: "var(--game-accent)", color: "var(--game-accent-ink)" }}
-          />
+          <SubpageBackLink label={tNav("backHome")} />
           <Typography
             aria-hidden="true"
             className="game-glyph game-glyph--slogan"
@@ -105,9 +102,12 @@ export default function GameHero({ profile }: GameHeroProps) {
               <Image alt="" fill priority sizes="96px" src={profile.avatar} style={{ objectFit: "contain" }} />
             </Box>
             <Box>
-              <Typography sx={{ fontSize: 30, fontWeight: 800 }}>
-                {profile.nickname}
-              </Typography>
+              <Stack direction="row" spacing={1.25} sx={{ alignItems: "center" }}>
+                <Typography sx={{ fontSize: 30, fontWeight: 800 }}>
+                  {profile.nickname}
+                </Typography>
+                <GameDataRefreshButton />
+              </Stack>
               <Typography className="game-mono" sx={{ color: usesLightForeground ? "rgba(244,247,246,0.72)" : "text.secondary", fontWeight: 700, mt: 0.5 }}>
                 UID {profile.uid}
               </Typography>

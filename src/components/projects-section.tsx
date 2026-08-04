@@ -29,10 +29,15 @@ export default function ProjectsSection({ details, installCount, repositories }:
   const [selectedRepository, setSelectedRepository] = useState<GitHubRepository | null>(null);
 
   return (
-    <Box className="reveal-section" component="section" id="work" sx={{ py: { xs: 9, md: 14 } }}>
+    <Box className="reveal-section" component="section" id="work" sx={{ py: { xs: 7, md: 8 } }}>
       <ScrollReveal>
         <Container maxWidth="xl">
-          <SectionHeading description={t("description")} eyebrow={t("eyebrow")} title={t("title")} />
+          <SectionHeading
+            compact
+            description={t("description")}
+            eyebrow={t("eyebrow")}
+            title={t("title")}
+          />
           <Box sx={{ display: "grid", gap: 2, gridTemplateColumns: { xs: "1fr", md: "repeat(12, 1fr)" } }}>
             {repositories.slice(0, 2).map((repository, index) => (
               <ProjectCard
@@ -44,7 +49,7 @@ export default function ProjectsSection({ details, installCount, repositories }:
               />
             ))}
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
             <Button component={Link} endIcon={<ArrowForwardRounded />} href="/projects" prefetch>
               {t("viewMore")}
             </Button>

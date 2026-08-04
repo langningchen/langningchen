@@ -11,6 +11,7 @@ export default function LanguageBreakdown({ data }: LanguageBreakdownProps) {
   const total = data.reduce((sum, language) => sum + language.value, 0);
 
   if (total === 0) return null;
+  const visibleLanguages = data.filter((language) => language.value / total >= 0.01);
 
   return (
     <Stack spacing={1.5}>
@@ -26,7 +27,7 @@ export default function LanguageBreakdown({ data }: LanguageBreakdownProps) {
         ))}
       </Box>
       <Stack direction="row" sx={{ flexWrap: "wrap", gap: 1.75 }}>
-        {data.map((language) => (
+        {visibleLanguages.map((language) => (
           <Stack direction="row" key={language.name} spacing={0.75} sx={{ alignItems: "center" }}>
             <Box sx={{ bgcolor: language.color, height: 8, width: 8 }} />
             <Typography variant="body2">{language.name}</Typography>

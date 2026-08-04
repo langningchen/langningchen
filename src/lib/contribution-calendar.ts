@@ -1,3 +1,6 @@
+import { RUNTIME_FALLBACK } from "./runtime-fallback";
+import { fetchFromServer } from "./server-fetch";
+
 export interface ContributionDay {
   count: number;
   date: string;
@@ -9,20 +12,14 @@ export interface ContributionCalendarData {
   total: number;
 }
 
-const EMPTY_CALENDAR: ContributionCalendarData = {
-  contributions: [],
-  total: 0,
-};
-
 export async function getContributionCalendar(): Promise<ContributionCalendarData> {
   try {
-    const response = await fetch(
+    const response = await fetchFromServer(
       "https://gh-calendar.rschristian.dev/user/langningchen",
-      { next: { revalidate: 3600 } },
     );
-    if (!response.ok) return EMPTY_CALENDAR;
+    if (!response.ok) return RUNTIME_FALLBACK.calendar;
     return (await response.json()) as ContributionCalendarData;
   } catch {
-    return EMPTY_CALENDAR;
+    return RUNTIME_FALLBACK.calendar;
   }
 }

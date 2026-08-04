@@ -8,8 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
 import { useTranslations } from "next-intl";
+import Image from "./progressive-image";
 
 export interface EducationImage {
   alt: string;
@@ -24,17 +24,26 @@ export default function EducationCarousel({ images }: EducationCarouselProps) {
   const t = useTranslations("journey");
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);
+  const [previousIndex, setPreviousIndex] = useState<number | null>(null);
 
   useEffect(() => {
     if (paused || images.length < 2) return;
-    const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % images.length);
+    const timer = window.setTimeout(() => {
+      setPreviousIndex(activeIndex);
+      setActiveIndex((activeIndex + 1) % images.length);
     }, 4800);
-    return () => window.clearInterval(timer);
-  }, [images.length, paused]);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, images.length, paused]);
+
+  useEffect(() => {
+    if (previousIndex === null) return;
+    const timer = window.setTimeout(() => setPreviousIndex(null), 560);
+    return () => window.clearTimeout(timer);
+  }, [activeIndex, previousIndex]);
 
   const move = (direction: number) => {
-    setActiveIndex((current) => (current + direction + images.length) % images.length);
+    setPreviousIndex(activeIndex);
+    setActiveIndex((activeIndex + direction + images.length) % images.length);
   };
 
   return (
@@ -45,18 +54,26 @@ export default function EducationCarousel({ images }: EducationCarouselProps) {
       onMouseLeave={() => setPaused(false)}
       sx={{ aspectRatio: "16 / 9", bgcolor: "#111512", overflow: "hidden", position: "relative" }}
     >
-      <Image
-        alt={images[activeIndex].alt}
-        className="carousel-image"
-        fill
-        key={images[activeIndex].src}
-        sizes="(max-width: 900px) 100vw, 38vw"
-        src={images[activeIndex].src}
-      />
+      {images.map((image, index) => {
+        const isActive = index === activeIndex;
+        const isPrevious = index === previousIndex;
+
+        return (
+          <Image
+            alt={isActive ? image.alt : ""}
+            aria-hidden={!isActive}
+            className={`carousel-image${isActive ? " carousel-image--active" : ""}${isPrevious ? " carousel-image--previous" : ""}`}
+            fill
+            key={image.src}
+            sizes="(max-width: 900px) 100vw, 38vw"
+            src={image.src}
+          />
+        );
+      })}
       <Stack
         direction="row"
         spacing={0.5}
-        sx={{ alignItems: "center", bottom: 12, left: 12, position: "absolute" }}
+        sx={{ alignItems: "center", bottom: 12, left: 12, position: "absolute", zIndex: 3 }}
       >
         <Tooltip title={t("previousImage")}>
           <IconButton
@@ -81,7 +98,7 @@ export default function EducationCarousel({ images }: EducationCarouselProps) {
       </Stack>
       <Typography
         className="mono"
-        sx={{ bgcolor: "rgba(10,14,11,0.78)", bottom: 14, color: "#f0f0f0", fontSize: 12, px: 1, py: 0.5, position: "absolute", right: 14 }}
+        sx={{ bgcolor: "rgba(10,14,11,0.78)", bottom: 14, color: "#f0f0f0", fontSize: 12, px: 1, py: 0.5, position: "absolute", right: 14, zIndex: 3 }}
       >
         {String(activeIndex + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}
       </Typography>

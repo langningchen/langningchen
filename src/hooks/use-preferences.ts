@@ -53,6 +53,7 @@ export function usePreferences() {
   return {
     language,
     mode,
+    ready: preferencesLoaded,
     setLanguage,
     toggleMode: () => setMode((current) => (current === "dark" ? "light" : "dark")),
   };

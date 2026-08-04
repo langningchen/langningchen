@@ -10,16 +10,19 @@ import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Image from "next/image";
+import { useTheme } from "@mui/material/styles";
 import { useTranslations } from "next-intl";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import Image from "./progressive-image";
 import ScrollCue from "./scroll-cue";
 import TerminalEffect from "./terminal-effect";
 
 export default function HeroSection() {
   const t = useTranslations("hero");
+  const theme = useTheme();
   const heroRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const lightMode = theme.palette.mode === "light";
   const { scrollYProgress } = useScroll({
     offset: ["start start", "end start"],
     target: heroRef,
@@ -28,16 +31,21 @@ export default function HeroSection() {
   const contentY = useTransform(scrollYProgress, [0, 1], [0, -84]);
   const imageScale = useTransform(scrollYProgress, [0, 1], [1.02, 1.14]);
   const imageY = useTransform(scrollYProgress, [0, 1], [0, 92]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.66, 0.86]);
+  const overlayOpacity = useTransform(
+    scrollYProgress,
+    [0, 1],
+    lightMode ? [0.78, 0.9] : [0.66, 0.86],
+  );
+  const overlayColor = lightMode ? "#f3f6f4" : "#07090a";
 
   return (
     <Box
       component="section"
       ref={heroRef}
       sx={{
-        alignItems: "flex-end",
-        bgcolor: "#0a0b0d",
-        color: "#f5f6f0",
+        alignItems: "center",
+        bgcolor: lightMode ? "#e9f0ec" : "#0a0b0d",
+        color: lightMode ? "#17201b" : "#f5f6f0",
         display: "flex",
         minHeight: "100svh",
         overflow: "hidden",
@@ -59,16 +67,18 @@ export default function HeroSection() {
       </motion.div>
       <motion.div
         className="hero-parallax-overlay"
-        style={reduceMotion ? undefined : { opacity: overlayOpacity }}
+        style={reduceMotion
+          ? { backgroundColor: overlayColor, opacity: lightMode ? 0.78 : 0.66 }
+          : { backgroundColor: overlayColor, opacity: overlayOpacity }}
       />
       <motion.div
         className="hero-parallax-content"
         style={reduceMotion ? undefined : { opacity: contentOpacity, y: contentY }}
       >
-        <Container maxWidth="xl" sx={{ pb: { xs: 6, md: 9 }, position: "relative", zIndex: 1 }}>
+        <Container maxWidth="xl" sx={{ py: { xs: 8, md: 9 }, position: "relative", zIndex: 1 }}>
         <Box sx={{ maxWidth: 820 }}>
           <Stack direction="row" spacing={1.5} sx={{ alignItems: "center", mb: 2.5 }}>
-            <Box sx={{ bgcolor: "#87dbac", borderRadius: "50%", height: 9, width: 9 }} />
+            <Box sx={{ bgcolor: lightMode ? "#287356" : "#87dbac", borderRadius: "50%", height: 9, width: 9 }} />
             <Typography className="mono" sx={{ fontWeight: 700 }} variant="overline">
               {t("eyebrow")}
             </Typography>
@@ -88,7 +98,12 @@ export default function HeroSection() {
             {t("role")}
           </Typography>
           <Typography
-            sx={{ color: "rgba(245,246,240,0.76)", fontSize: { xs: 16, md: 19 }, lineHeight: 1.7, maxWidth: 690 }}
+            sx={{
+              color: lightMode ? "rgba(23,32,27,0.78)" : "rgba(245,246,240,0.76)",
+              fontSize: { xs: 16, md: 19 },
+              lineHeight: 1.7,
+              maxWidth: 690,
+            }}
           >
             {t("description")}
           </Typography>
@@ -119,24 +134,32 @@ export default function HeroSection() {
             <Chip
               icon={<LocationOnRounded />}
               label={t("location")}
-              sx={{ bgcolor: "rgba(255,255,255,0.1)", color: "inherit" }}
+              sx={{
+                bgcolor: lightMode ? "rgba(255,255,255,0.66)" : "rgba(255,255,255,0.1)",
+                border: lightMode ? "1px solid rgba(40,115,86,0.2)" : "1px solid transparent",
+                color: "inherit",
+                "& .MuiChip-icon": { color: lightMode ? "#287356" : "#87dbac" },
+              }}
             />
             <Chip
               color="primary"
               label={t("availability")}
-              sx={{ borderColor: "rgba(135,219,172,0.6)", color: "#b8f0d0" }}
+              sx={{
+                borderColor: lightMode ? "rgba(40,115,86,0.48)" : "rgba(135,219,172,0.6)",
+                color: lightMode ? "#205f48" : "#b8f0d0",
+              }}
               variant="outlined"
             />
           </Stack>
         </Box>
-          <TerminalEffect />
+          <TerminalEffect lightMode={lightMode} />
         </Container>
       </motion.div>
       <motion.div
         className="hero-scroll-cue"
         style={reduceMotion ? undefined : { opacity: contentOpacity }}
       >
-        <ScrollCue />
+        <ScrollCue lightMode={lightMode} />
       </motion.div>
     </Box>
   );
