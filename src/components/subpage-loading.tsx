@@ -55,7 +55,7 @@ export default function SubpageLoading({ variant }: SubpageLoadingProps) {
       <Box className="subpage-loading__stage">
         <div
           className="subpage-loading__frame"
-          style={{ borderColor: accent, borderRightColor: "transparent", color: accent }}
+          style={{ borderColor: accent, color: accent }}
         />
         <Typography component="p" sx={{ fontSize: { xs: 24, md: 32 }, fontWeight: 800 }}>
           {title}

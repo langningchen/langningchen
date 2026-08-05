@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import ArrowDownwardRounded from "@mui/icons-material/ArrowDownwardRounded";
-import GitHub from "@mui/icons-material/GitHub";
+import { MarkGithubIcon } from "@primer/octicons-react";
 import LocationOnRounded from "@mui/icons-material/LocationOnRounded";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -123,7 +123,7 @@ export default function HeroSection() {
               href="https://github.com/langningchen"
               rel="noreferrer"
               size="large"
-              startIcon={<GitHub />}
+              startIcon={<MarkGithubIcon size={18} />}
               target="_blank"
               variant="outlined"
             >

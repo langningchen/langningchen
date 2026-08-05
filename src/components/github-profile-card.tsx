@@ -1,4 +1,4 @@
-import GitHub from "@mui/icons-material/GitHub";
+import { MarkGithubIcon } from "@primer/octicons-react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -48,7 +48,7 @@ export default function GitHubProfileCard({ profile }: GitHubProfileCardProps) {
       </Stack>
       <Button
         color="primary"
-        endIcon={<GitHub />}
+        endIcon={<MarkGithubIcon size={18} />}
         href={profile.html_url}
         rel="noreferrer"
         target="_blank"

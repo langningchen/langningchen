@@ -12,6 +12,8 @@ import Typography from "@mui/material/Typography";
 import { useLocale, useTranslations } from "next-intl";
 import { GAME_GLYPH_COPY } from "@/data/game-glyph-copy";
 import type { GameProfile } from "@/lib/game-data";
+import { getGameCharacterImageAssets } from "@/lib/game-image-assets";
+import { preloadImages } from "@/lib/image-preloader";
 import type { GameCharacter } from "@/lib/game-types";
 import GameCharacterDrawer from "./game-character-drawer";
 import Image from "./progressive-image";
@@ -26,6 +28,13 @@ export default function GameShowcase({ profile }: GameShowcaseProps) {
   const t = useTranslations("games");
   const glyphCopy = GAME_GLYPH_COPY[profile.game];
   const [selectedCharacter, setSelectedCharacter] = useState<GameCharacter | null>(null);
+  const preloadCharacter = (character: GameCharacter) => {
+    preloadImages(getGameCharacterImageAssets(character), {
+      batchDelayMs: 60,
+      batchSize: 4,
+      immediate: true,
+    });
+  };
 
   return (
     <Box component="section" sx={{ bgcolor: "var(--game-showcase)", py: { xs: 9, md: 13 } }}>
@@ -50,7 +59,13 @@ export default function GameShowcase({ profile }: GameShowcaseProps) {
         >
           {profile.showcase.map((character) => (
             <Card className="game-character-card" key={character.id} variant="outlined">
-              <CardActionArea aria-label={t("openCharacterDetails", { name: character.name[locale] })} onClick={() => setSelectedCharacter(character)}>
+              <CardActionArea
+                aria-label={t("openCharacterDetails", { name: character.name[locale] })}
+                onClick={() => setSelectedCharacter(character)}
+                onFocus={() => preloadCharacter(character)}
+                onPointerEnter={() => preloadCharacter(character)}
+                onTouchStart={() => preloadCharacter(character)}
+              >
                 <Box sx={{ alignItems: "center", aspectRatio: "1 / 1", bgcolor: "var(--game-portrait)", display: "flex", justifyContent: "center" }}>
                   <Box sx={{ height: { xs: 88, sm: 112 }, position: "relative", width: { xs: 88, sm: 112 } }}>
                     <Image

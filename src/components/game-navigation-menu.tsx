@@ -10,6 +10,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { getGameRouteImageAssets } from "@/lib/game-image-assets";
+import { preloadImages } from "@/lib/image-preloader";
 import Image from "./progressive-image";
 
 interface GameNavigationMenuProps {
@@ -29,6 +31,12 @@ export default function GameNavigationMenu({
   const navigate = () => {
     closeMenu();
     onNavigate?.();
+  };
+  const preloadGame = (game: "genshin" | "starRail") => {
+    preloadImages(getGameRouteImageAssets(game, true), {
+      batchSize: 3,
+      immediate: true,
+    });
   };
 
   return (
@@ -51,7 +59,14 @@ export default function GameNavigationMenu({
         open={open}
         slotProps={{ paper: { sx: { minWidth: 220, mt: 1 } } }}
       >
-        <MenuItem component={Link} href="/games/genshin" onClick={navigate}>
+        <MenuItem
+          component={Link}
+          href="/games/genshin"
+          onClick={navigate}
+          onFocus={() => preloadGame("genshin")}
+          onPointerEnter={() => preloadGame("genshin")}
+          onTouchStart={() => preloadGame("genshin")}
+        >
           <ListItemIcon sx={{ minWidth: 42 }}>
             <Box
               sx={{ borderRadius: 1, height: 30, overflow: "hidden", position: "relative", width: 30 }}
@@ -61,7 +76,14 @@ export default function GameNavigationMenu({
           </ListItemIcon>
           {t("genshin")}
         </MenuItem>
-        <MenuItem component={Link} href="/games/star-rail" onClick={navigate}>
+        <MenuItem
+          component={Link}
+          href="/games/star-rail"
+          onClick={navigate}
+          onFocus={() => preloadGame("starRail")}
+          onPointerEnter={() => preloadGame("starRail")}
+          onTouchStart={() => preloadGame("starRail")}
+        >
           <ListItemIcon sx={{ minWidth: 42 }}>
             <Box
               sx={{ borderRadius: 1, height: 30, overflow: "hidden", position: "relative", width: 30 }}

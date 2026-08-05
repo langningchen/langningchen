@@ -1,10 +1,20 @@
 export interface GitHubSearchItem {
+  comments?: number;
   created_at: string;
+  closed_as_duplicate_of?: number | { number?: number } | null;
+  draft?: boolean;
   html_url: string;
   number: number;
-  pull_request?: object;
+  pull_request?: {
+    merged_at?: string | null;
+  };
+  reactions?: {
+    total_count?: number;
+  };
+  duplicate_of?: number | { number?: number } | null;
   repository_url: string;
   state: "closed" | "open";
+  state_reason?: "completed" | "not_planned" | "reopened" | null;
   title: string;
   updated_at: string;
 }
@@ -17,7 +27,10 @@ export interface ContributionProject {
 }
 
 export interface ContributionRecord {
+  closedReason?: "merged" | "notPlanned" | "duplicate" | "closed";
   createdAt: string;
+  draft?: boolean;
+  interactions?: number;
   kind: "issue" | "pullRequest";
   number: number;
   repository: string;
@@ -25,6 +38,25 @@ export interface ContributionRecord {
   title: string;
   updatedAt: string;
   url: string;
+  duplicateOf?: number;
+}
+
+function duplicateOf(item: GitHubSearchItem): number | undefined {
+  const value = item.closed_as_duplicate_of ?? item.duplicate_of;
+  if (typeof value === "number") return value;
+  if (value && typeof value.number === "number") return value.number;
+  return undefined;
+}
+
+function closedReason(
+  item: GitHubSearchItem,
+  kind: ContributionRecord["kind"],
+): ContributionRecord["closedReason"] {
+  if (item.state === "open") return undefined;
+  if (kind === "pullRequest" && item.pull_request?.merged_at) return "merged";
+  if (kind === "issue" && duplicateOf(item) !== undefined) return "duplicate";
+  if (item.state_reason === "not_planned") return "notPlanned";
+  return "closed";
 }
 
 export interface CommunityData {
@@ -108,7 +140,11 @@ export function collectContributionRecords(
     ...issues.map((item) => ({ item, kind: "issue" as const })),
   ]
     .map(({ item, kind }) => ({
+      closedReason: closedReason(item, kind),
       createdAt: item.created_at,
+      draft: kind === "pullRequest" ? item.draft : undefined,
+      duplicateOf: kind === "issue" ? duplicateOf(item) : undefined,
+      interactions: (item.comments ?? 0) + (item.reactions?.total_count ?? 0),
       kind,
       number: item.number,
       repository: repositoryName(item.repository_url),

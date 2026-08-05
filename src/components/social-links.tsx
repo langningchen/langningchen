@@ -1,5 +1,5 @@
 import AlternateEmailRounded from "@mui/icons-material/AlternateEmailRounded";
-import GitHub from "@mui/icons-material/GitHub";
+import { MarkGithubIcon } from "@primer/octicons-react";
 import LinkedIn from "@mui/icons-material/LinkedIn";
 import SendRounded from "@mui/icons-material/SendRounded";
 import IconButton from "@mui/material/IconButton";
@@ -8,7 +8,7 @@ import Tooltip from "@mui/material/Tooltip";
 
 const LINKS = [
   { href: "mailto:i@langningchen.com", icon: <AlternateEmailRounded />, label: "Email" },
-  { href: "https://github.com/langningchen", icon: <GitHub />, label: "GitHub" },
+  { href: "https://github.com/langningchen", icon: <MarkGithubIcon size={18} />, label: "GitHub" },
   { href: "https://www.linkedin.com/in/langningchen", icon: <LinkedIn />, label: "LinkedIn" },
   { href: "https://telegram.me/langningchen", icon: <SendRounded />, label: "Telegram" },
 ];

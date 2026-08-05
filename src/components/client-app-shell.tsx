@@ -10,6 +10,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { usePreferences } from "@/hooks/use-preferences";
 import { MESSAGES } from "@/i18n/config";
 import { createSiteTheme } from "@/theme/create-site-theme";
+import { getGameRouteImageAssets } from "@/lib/game-image-assets";
+import ImagePreloader from "./image-preloader";
 import InitialLoadingScreen from "./initial-loading-screen";
 import SiteHeader from "./site-header";
 import RouteTransition from "./route-transition";
@@ -18,6 +20,11 @@ import SmoothScroll from "./smooth-scroll";
 interface ClientAppShellProps {
   children: React.ReactNode;
 }
+
+const GAME_ROUTE_IMAGE_ASSETS = [
+  ...getGameRouteImageAssets("genshin"),
+  ...getGameRouteImageAssets("starRail"),
+];
 
 export default function ClientAppShell({ children }: ClientAppShellProps) {
   const pathname = usePathname();
@@ -41,6 +48,12 @@ export default function ClientAppShell({ children }: ClientAppShellProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <SmoothScroll />
+        <ImagePreloader
+          assets={GAME_ROUTE_IMAGE_ASSETS}
+          batchSize={2}
+          delayMs={1200}
+          enabled={appReady}
+        />
         <AnimatePresence>
           {!appReady && (
             <InitialLoadingScreen

@@ -123,11 +123,27 @@
     "description": "Pull requests and issues I have submitted to other open-source projects, ordered by their latest update.",
     "pullRequest": "Pull request",
     "issue": "Issue",
+    "filters": "Filter collaboration records",
+    "type": "Type",
+    "result": "Result",
+    "repository": "Repository",
+    "sortBy": "Sort by",
+    "sortUpdated": "Recently updated",
+    "sortInteractions": "Most interactions",
+    "all": "All",
+    "showing": "Showing {count} records",
     "open": "Open",
+    "draft": "Draft",
+    "merged": "Merged",
     "closed": "Closed",
+    "closedReason": {
+      "notPlanned": "Closed as not planned",
+      "duplicate": "Closed as duplicate of #{number}",
+      "closed": "Closed"
+    },
     "updated": "Updated {date}",
-    "openGitHub": "View on GitHub",
-    "empty": "Collaboration records are currently unavailable."
+    "empty": "Collaboration records are currently unavailable.",
+    "noMatches": "No collaboration records match these filters."
   },
   "toolkit": {
     "eyebrow": "Toolkit",

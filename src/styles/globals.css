@@ -367,16 +367,6 @@ main > .reveal-section > div {
   width: 52px;
 }
 
-.subpage-loading__frame::after {
-  background: currentColor;
-  content: "";
-  height: 7px;
-  position: absolute;
-  right: -4px;
-  top: -4px;
-  width: 7px;
-}
-
 .subpage-loading__rail {
   height: 2px;
   overflow: hidden;

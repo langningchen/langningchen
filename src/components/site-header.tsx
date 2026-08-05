@@ -93,7 +93,12 @@ export default function SiteHeader(props: SiteHeaderProps) {
         anchor="right"
         onClose={() => setDrawerOpen(false)}
         open={drawerOpen}
-        slotProps={{ paper: { sx: { p: 3, pt: 5, width: "min(84vw, 340px)" } } }}
+        slotProps={{
+          paper: {
+            ...({ "data-lenis-prevent": true } as Record<string, unknown>),
+            sx: { p: 3, pt: 5, width: "min(84vw, 340px)" },
+          },
+        }}
       >
         <Stack spacing={3}>
           <Typography className="mono" variant="h5">

@@ -1,3 +1,5 @@
+"use client";
+
 import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -6,6 +8,8 @@ import type { Route } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import type { GameId } from "@/lib/game-types";
+import { getGameRouteImageAssets } from "@/lib/game-image-assets";
+import { preloadImages } from "@/lib/image-preloader";
 import Image from "./progressive-image";
 
 interface GamePortalPanelProps {
@@ -20,11 +24,20 @@ export default function GamePortalPanel({ game }: GamePortalPanelProps) {
   const accent = isGenshin ? "#b99a58" : "#5aa9c4";
   const description = isGenshin ? t("genshinDescription") : t("starRailDescription");
   const uid = isGenshin ? "302368983" : "161319930";
+  const preloadCharacterArt = () => {
+    preloadImages(getGameRouteImageAssets(game, true), {
+      batchSize: 3,
+      immediate: true,
+    });
+  };
 
   return (
     <Box
       component={Link}
       href={href as Route}
+      onFocus={preloadCharacterArt}
+      onPointerEnter={preloadCharacterArt}
+      onTouchStart={preloadCharacterArt}
       prefetch
       sx={{
         bgcolor: "background.default",

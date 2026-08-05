@@ -1,4 +1,4 @@
-import GitHub from "@mui/icons-material/GitHub";
+import { MarkGithubIcon } from "@primer/octicons-react";
 import HistoryRounded from "@mui/icons-material/HistoryRounded";
 import OpenInNewRounded from "@mui/icons-material/OpenInNewRounded";
 import Button from "@mui/material/Button";
@@ -29,7 +29,7 @@ export default function ProjectActions({
         href={source}
         rel="noreferrer"
         size="small"
-        startIcon={<GitHub />}
+        startIcon={<MarkGithubIcon size={16} />}
         target="_blank"
         variant="text"
       >

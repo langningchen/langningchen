@@ -1,6 +1,6 @@
 import CallSplitRounded from "@mui/icons-material/CallSplitRounded";
 import DownloadRounded from "@mui/icons-material/DownloadRounded";
-import ErrorOutlineRounded from "@mui/icons-material/ErrorOutlineRounded";
+import { IssueOpenedIcon } from "@primer/octicons-react";
 import StarRounded from "@mui/icons-material/StarRounded";
 import UpdateRounded from "@mui/icons-material/UpdateRounded";
 import Box from "@mui/material/Box";
@@ -21,7 +21,7 @@ export default function ProjectDetailMetrics({ installCount, repository }: Proje
   const metrics = [
     { icon: <StarRounded />, label: t("stars"), value: repository.stargazers_count },
     { icon: <CallSplitRounded />, label: t("forks"), value: repository.forks_count },
-    { icon: <ErrorOutlineRounded />, label: t("issues"), value: repository.open_issues_count ?? 0 },
+    { icon: <IssueOpenedIcon size={18} />, label: t("issues"), value: repository.open_issues_count ?? 0 },
     ...(installCount === undefined
       ? []
       : [{ icon: <DownloadRounded />, label: t("installs"), value: installCount }]),

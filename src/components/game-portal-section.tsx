@@ -13,7 +13,7 @@ export default function GamePortalSection() {
       className="reveal-section"
       component="section"
       id="games"
-      sx={{ bgcolor: "background.paper", borderBlock: 1, borderColor: "divider", py: { xs: 9, md: 12 } }}
+      sx={{ bgcolor: "background.paper", borderTop: 1, borderColor: "divider", py: { xs: 9, md: 12 } }}
     >
       <ScrollReveal variant="settle">
         <Container maxWidth="xl">

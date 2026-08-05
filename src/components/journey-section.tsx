@@ -14,8 +14,6 @@ export default function JourneySection() {
       id="journey"
       sx={{
         bgcolor: "background.paper",
-        borderTop: 1,
-        borderColor: "divider",
         color: "text.primary",
         py: { xs: 9, md: 14 },
       }}

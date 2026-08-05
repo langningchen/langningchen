@@ -123,11 +123,27 @@
     "description": "我在其他开源项目中提交的 Pull Request 与 Issue，按最近更新时间排列",
     "pullRequest": "Pull Request",
     "issue": "Issue",
+    "filters": "筛选协作记录",
+    "type": "类型",
+    "result": "结果",
+    "repository": "仓库",
+    "sortBy": "排序方式",
+    "sortUpdated": "最近更新",
+    "sortInteractions": "互动最多",
+    "all": "全部",
+    "showing": "显示 {count} 条记录",
     "open": "进行中",
+    "draft": "草稿",
+    "merged": "已合并",
     "closed": "已关闭",
+    "closedReason": {
+      "notPlanned": "已关闭（不计划处理）",
+      "duplicate": "已关闭（重复问题 #{number}）",
+      "closed": "已关闭"
+    },
     "updated": "{date} 更新",
-    "openGitHub": "在 GitHub 查看",
-    "empty": "协作记录暂时无法获取"
+    "empty": "协作记录暂时无法获取",
+    "noMatches": "没有符合筛选条件的协作记录"
   },
   "toolkit": {
     "eyebrow": "技术栈",

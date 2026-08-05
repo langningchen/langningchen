@@ -21,13 +21,15 @@ export default function RouteTransition({
       <motion.div
         animate={
           ready
-            ? { filter: "blur(0px)", opacity: 1, y: 0 }
-            : { filter: "blur(5px)", opacity: 0, y: 20 }
+            ? { filter: "blur(0px)", opacity: 1, scale: 1 }
+            : { filter: "blur(5px)", opacity: 0, scale: 0.985 }
         }
-        exit={reduceMotion ? undefined : { filter: "blur(3px)", opacity: 0, y: -10 }}
-        initial={reduceMotion ? false : { filter: "blur(2px)", opacity: 0.72, y: 12 }}
+        exit={reduceMotion ? undefined : { opacity: 0 }}
+        initial={reduceMotion ? false : { filter: "blur(6px)", opacity: 0.72, scale: 0.985 }}
         key={pathname}
-        transition={{ duration: ready ? 0.54 : 0.2, ease: [0.22, 1, 0.36, 1] }}
+        suppressHydrationWarning
+        style={{ minHeight: "100vh", transformOrigin: "50% 0%", width: "100%" }}
+        transition={{ delay: ready ? 0.04 : 0, duration: ready ? 0.62 : 0.2, ease: [0.22, 1, 0.36, 1] }}
       >
         {children}
       </motion.div>

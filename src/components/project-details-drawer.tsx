@@ -1,5 +1,5 @@
 import CloseRounded from "@mui/icons-material/CloseRounded";
-import GitHub from "@mui/icons-material/GitHub";
+import { MarkGithubIcon } from "@primer/octicons-react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -128,7 +128,7 @@ export default function ProjectDetailsDrawer({
             color="primary"
             href={repository.html_url}
             rel="noreferrer"
-            startIcon={<GitHub />}
+            startIcon={<MarkGithubIcon size={18} />}
             target="_blank"
             variant="outlined"
           >

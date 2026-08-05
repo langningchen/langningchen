@@ -1,7 +1,6 @@
 import ArrowOutwardRounded from "@mui/icons-material/ArrowOutwardRounded";
 import ArrowForwardRounded from "@mui/icons-material/ArrowForwardRounded";
-import CallMergeRounded from "@mui/icons-material/CallMergeRounded";
-import ErrorOutlineRounded from "@mui/icons-material/ErrorOutlineRounded";
+import { GitPullRequestIcon, IssueOpenedIcon } from "@primer/octicons-react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -74,13 +73,13 @@ export default function CommunitySection({ projects }: CommunitySectionProps) {
                   <Stack direction="row" spacing={1.5} sx={{ color: "text.secondary", mt: 1 }}>
                     {project.pullRequests > 0 && (
                       <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
-                        <CallMergeRounded fontSize="small" />
+                        <GitPullRequestIcon size={16} />
                         <Typography variant="body2">{t("pullRequests", { count: project.pullRequests })}</Typography>
                       </Stack>
                     )}
                     {project.issues > 0 && (
                       <Stack direction="row" spacing={0.5} sx={{ alignItems: "center" }}>
-                        <ErrorOutlineRounded fontSize="small" />
+                        <IssueOpenedIcon size={16} />
                         <Typography variant="body2">{t("issues", { count: project.issues })}</Typography>
                       </Stack>
                     )}
