@@ -1,8 +1,7 @@
 import englishMessages from "@/messages/en.json";
 import chineseMessages from "@/messages/zh.json";
 
-export const LOCALES = ["en", "zh"] as const;
-export type Language = (typeof LOCALES)[number];
+export type Language = "en" | "zh";
 
 export const MESSAGES = {
   en: englishMessages,

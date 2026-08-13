@@ -2,7 +2,7 @@ import type { GitHubRepository, LanguageStat } from "./github";
 import { aggregateLanguages, repositoryFullName } from "./github";
 import { fetchFromServer } from "./server-fetch";
 
-export interface GitHubContributor {
+interface GitHubContributor {
   avatar_url: string;
   contributions: number;
   html_url: string;
@@ -115,7 +115,7 @@ function summarizeReadme(markdown: string): string {
     .slice(0, 520);
 }
 
-export async function getProjectDetails(
+async function getProjectDetails(
   repository: GitHubRepository,
   fallback: ProjectDetailsData = EMPTY_PROJECT_DETAILS,
 ): Promise<ProjectDetailsData> {

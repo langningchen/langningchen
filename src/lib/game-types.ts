@@ -1,6 +1,6 @@
 export type GameId = "genshin" | "starRail";
 
-export interface LocalizedGameText {
+interface LocalizedGameText {
   en: string;
   zh: string;
 }

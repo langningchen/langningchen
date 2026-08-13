@@ -33,7 +33,7 @@ export default function CommunitySection({ projects }: CommunitySectionProps) {
           {projects.map((project) => (
             <Box
               component="a"
-              href={project.url}
+              href={`${project.url}/issues?q=author%3Alangningchen`}
               key={project.name}
               rel="noreferrer"
               target="_blank"

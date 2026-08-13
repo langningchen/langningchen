@@ -20,22 +20,3 @@ export const STAR_RAIL_CHARACTERS: Record<string, CharacterIdentity> = {
   "1415": { id: "1415", image: "/games/starrail-1415.png", name: { en: "Cyrene", zh: "昔涟" }, splashImage: "/games/characters/starrail-1415.webp" },
   "1506": { id: "1506", image: "/games/starrail-1506.png", name: { en: "Silver Wolf LV.999", zh: "银狼LV.999" }, splashImage: "/games/characters/starrail-1506.webp" },
 };
-
-export const GENSHIN_FALLBACK_LEVELS = [
-  ["10000096", 90],
-  ["10000091", 86],
-  ["10000089", 90],
-  ["10000069", 80],
-  ["10000114", 90],
-  ["10000074", 80],
-] as const;
-
-export const STAR_RAIL_FALLBACK_IDS = [
-  "1413",
-  "1414",
-  "1415",
-  "1409",
-  "1306",
-  "1015",
-  "1506",
-] as const;

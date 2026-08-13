@@ -7,8 +7,9 @@ import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
 import { useFormatter, useTranslations } from "next-intl";
-import type { ContributionCalendarData } from "@/lib/contribution-calendar";
+import type { ContributionCalendarData, ContributionDay } from "@/lib/contribution-calendar";
 import { groupContributionsByMonth } from "@/lib/contribution-months";
+import type { ContributionMonth } from "@/lib/contribution-months";
 import ScrollReveal from "./scroll-reveal";
 
 const LEVEL_OPACITIES = [0.1, 0.3, 0.5, 0.72, 1];
@@ -54,6 +55,33 @@ function ContributionCell({ color, title }: ContributionCellProps) {
   );
 }
 
+interface ContributionMonthGridProps {
+  levels: string[];
+  month: ContributionMonth;
+  titleForDay: (day: ContributionDay) => string | undefined;
+}
+
+function ContributionMonthGrid({ levels, month, titleForDay }: ContributionMonthGridProps) {
+  return (
+    <Box sx={{ display: "flex", gap: "4px" }}>
+      {month.weeks.map((week, weekIndex) => (
+        <Box
+          key={weekIndex}
+          sx={{ display: "grid", gap: "4px", gridTemplateRows: "repeat(7, 12px)", width: 12 }}
+        >
+          {week.map((day, dayIndex) => (
+            <ContributionCell
+              color={day.date ? levels[Number(day.intensity)] ?? levels[0] : "transparent"}
+              key={`${weekIndex}-${dayIndex}-${day.date}`}
+              title={titleForDay(day)}
+            />
+          ))}
+        </Box>
+      ))}
+    </Box>
+  );
+}
+
 export default function ContributionCalendarSection({
   data,
 }: ContributionCalendarSectionProps) {
@@ -65,6 +93,9 @@ export default function ContributionCalendarSection({
   const weekdays = Array.from({ length: 7 }, (_, index) =>
     format.dateTime(new Date(Date.UTC(2024, 0, 7 + index)), { weekday: "narrow" }),
   );
+  const titleForDay = (day: ContributionDay) => day.date
+    ? `${format.dateTime(new Date(`${day.date}T00:00:00Z`), { dateStyle: "medium" })}: ${t("count", { count: day.count })}`
+    : undefined;
 
   return (
     <Box
@@ -94,7 +125,25 @@ export default function ContributionCalendarSection({
             {t("profile")}
           </Button>
         </Stack>
-        <Box sx={{ overflowX: "auto", pb: 1 }}>
+        <Box
+          aria-label={t("gridLabel")}
+          role="group"
+          sx={{
+            display: { xs: "grid", md: "none" },
+            gap: 3,
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+          }}
+        >
+          {months.map((month) => (
+            <Box key={month.key} sx={{ minWidth: 0 }}>
+              <Typography className="mono" color="text.secondary" sx={{ fontSize: 10, mb: 1.25 }}>
+                {format.dateTime(month.date, { month: "short", year: "numeric" })}
+              </Typography>
+              <ContributionMonthGrid levels={levels} month={month} titleForDay={titleForDay} />
+            </Box>
+          ))}
+        </Box>
+        <Box sx={{ display: { xs: "none", md: "block" }, overflowX: "auto", pb: 1 }}>
           <Box aria-label={t("gridLabel")} role="group" sx={{ display: "flex", gap: "10px", width: "max-content" }}>
             <Box aria-hidden="true" sx={{ pt: "25px" }}>
               {weekdays.map((weekday, index) => (
@@ -109,24 +158,7 @@ export default function ContributionCalendarSection({
                   <Typography className="mono" color="text.secondary" sx={{ fontSize: 10, mb: 1.25 }}>
                     {format.dateTime(month.date, { month: "short", year: "numeric" })}
                   </Typography>
-                  <Box sx={{ display: "flex", gap: "4px" }}>
-                    {month.weeks.map((week, weekIndex) => (
-                      <Box key={weekIndex} sx={{ display: "grid", gap: "4px", gridTemplateRows: "repeat(7, 12px)", width: 12 }}>
-                        {week.map((day, dayIndex) => {
-                          const title = day.date
-                            ? `${format.dateTime(new Date(`${day.date}T00:00:00Z`), { dateStyle: "medium" })}: ${t("count", { count: day.count })}`
-                            : undefined;
-                          return (
-                            <ContributionCell
-                              color={day.date ? levels[Number(day.intensity)] ?? levels[0] : "transparent"}
-                              key={`${weekIndex}-${dayIndex}-${day.date}`}
-                              title={title}
-                            />
-                          );
-                        })}
-                      </Box>
-                    ))}
-                  </Box>
+                  <ContributionMonthGrid levels={levels} month={month} titleForDay={titleForDay} />
                 </Box>
               ))}
             </Box>

@@ -22,7 +22,7 @@ export interface MihomoStarRailTrace {
   parent: string | null;
 }
 
-export interface MihomoStarRailCharacter {
+interface MihomoStarRailCharacter {
   id: string;
   light_cone: MihomoStarRailLightCone | null;
   rank: number;
