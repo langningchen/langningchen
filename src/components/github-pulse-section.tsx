@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { GitHubProfile, LanguageStat } from "@/lib/github";
 import type { WakaTimeData } from "@/lib/wakatime";
 import DataChartPanel from "./data-chart-panel";
@@ -22,9 +22,20 @@ export default function GitHubPulseSection({
   totalStars,
   wakaTime,
 }: GitHubPulseSectionProps) {
+  const locale = useLocale();
   const t = useTranslations("pulse");
   const startYear = new Date(profile.created_at).getUTCFullYear();
   const profileUrl = profile.html_url;
+  const formatDuration = (seconds: number) => {
+    const roundedMinutes = Math.floor(seconds / 60);
+    const hours = Math.floor(roundedMinutes / 60);
+    const minutes = roundedMinutes % 60;
+    const number = new Intl.NumberFormat(locale);
+    return t("duration", {
+      hours: number.format(hours),
+      minutes: number.format(minutes),
+    });
+  };
 
   return (
     <Box
@@ -60,7 +71,10 @@ export default function GitHubPulseSection({
           <DataChartPanel
             data={wakaTime.languages}
             label={t("focus")}
-            meta={[wakaTime.total, `${t("dailyAverage")} ${wakaTime.dailyAverage}`]}
+            meta={[
+              formatDuration(wakaTime.totalSeconds),
+              `${t("dailyAverage")} ${formatDuration(wakaTime.dailyAverageSeconds)}`,
+            ]}
             valuesArePercentages
           />
         </Box>

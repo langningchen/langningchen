@@ -1,7 +1,9 @@
 import type { GitHubProfile, GitHubRepository, LanguageStat } from "./github";
 import {
   aggregateLanguages,
+  repositoryFullName,
   selectFeaturedRepositories,
+  selectProjectRepositories,
   sumRepositoryStars,
 } from "./github";
 import { getProjectDetailsMap } from "./project-details";
@@ -22,6 +24,7 @@ export interface GitHubData {
   languages: LanguageStat[];
   profile: GitHubProfile;
   projectDetails: ProjectDetailsMap;
+  projects: GitHubRepository[];
   totalStars: number;
 }
 
@@ -55,7 +58,12 @@ function normalizeRepositories(
       : repository,
   );
 
-  return [...normalizedOwned, ...normalizedExtra];
+  return [...new Map(
+    [...normalizedOwned, ...normalizedExtra].map((repository) => [
+      repository.id,
+      repository,
+    ]),
+  ).values()];
 }
 
 function aggregateProjectLanguages(details: ProjectDetailsMap): LanguageStat[] {
@@ -67,7 +75,10 @@ function aggregateProjectLanguages(details: ProjectDetailsMap): LanguageStat[] {
   return aggregateLanguages(languageMaps);
 }
 
-export async function getGitHubData(detailsLimit = 8): Promise<GitHubData> {
+export async function getGitHubData(
+  detailsLimit = 8,
+  detailsOrder: "archive" | "featured" = "featured",
+): Promise<GitHubData> {
   try {
     const responses = await Promise.all([
       fetchFromServer(OWN_REPOSITORIES_URL, {
@@ -103,8 +114,15 @@ export async function getGitHubData(detailsLimit = 8): Promise<GitHubData> {
     );
     const repositories = normalizeRepositories(owned, extra);
     const featured = selectFeaturedRepositories(repositories);
+    const projects = selectProjectRepositories(repositories);
+    const featuredNames = new Set(
+      featured.slice(0, 2).map((repository) => repositoryFullName(repository)),
+    );
+    const detailRepositories = detailsOrder === "archive"
+      ? projects.filter((repository) => !featuredNames.has(repositoryFullName(repository)))
+      : featured;
     const projectDetails = await getProjectDetailsMap(
-      featured.slice(0, detailsLimit),
+      detailRepositories.slice(0, detailsLimit),
       RUNTIME_FALLBACK.github.projectDetails,
     );
     const languages = aggregateProjectLanguages({
@@ -118,6 +136,7 @@ export async function getGitHubData(detailsLimit = 8): Promise<GitHubData> {
         languages.length > 0 ? languages : RUNTIME_FALLBACK.github.languages,
       profile,
       projectDetails,
+      projects,
       totalStars: sumRepositoryStars(repositories),
     };
   } catch {

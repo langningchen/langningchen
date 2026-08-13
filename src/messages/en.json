@@ -52,7 +52,8 @@
   "projectArchive": {
     "eyebrow": "More projects",
     "title": "Other open-source work and experiments",
-    "description": "A collection of online judges, Hydro tooling, learning utilities, and completed experiments."
+    "description": "A collection of online judges, Hydro tooling, learning utilities, and completed experiments.",
+    "allProjects": "All other projects"
   },
   "projectDescriptions": {
     "cphNg": "A VS Code extension for competitive programming with sample retrieval, judging, stress tests, and multi-platform submission.",
@@ -104,6 +105,7 @@
     "githubApi": "Primary development languages",
     "selectedRepositories": "8 selected projects",
     "dailyAverage": "Daily average",
+    "duration": "{hours} hrs {minutes} mins",
     "profileLabel": "GitHub profile",
     "profileDescription": "Open-source projects, experiments, issues, and collaboration records are all kept public here.",
     "profileLink": "View GitHub profile",
@@ -136,6 +138,16 @@
     "draft": "Draft",
     "merged": "Merged",
     "closed": "Closed",
+    "selectedTypes": "{count} types selected",
+    "types": {
+      "issueOpen": "Issue · Open",
+      "issueClosed": "Issue · Closed",
+      "issueNotPlanned": "Issue · Not planned",
+      "issueDuplicate": "Issue · Duplicate",
+      "pullRequestOpen": "PR · Open",
+      "pullRequestMerged": "PR · Merged",
+      "pullRequestClosed": "PR · Closed"
+    },
     "closedReason": {
       "notPlanned": "Closed as not planned",
       "duplicate": "Closed as duplicate of #{number}",

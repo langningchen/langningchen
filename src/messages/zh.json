@@ -52,7 +52,8 @@
   "projectArchive": {
     "eyebrow": "更多项目",
     "title": "其他开源项目与实践",
-    "description": "这里收录 OJ、Hydro Helper、学习工具和已经结束维护的实验项目"
+    "description": "这里收录 OJ、Hydro Helper、学习工具和已经结束维护的实验项目",
+    "allProjects": "全部其他项目"
   },
   "projectDescriptions": {
     "cphNg": "面向竞赛编程的 VS Code 扩展，集成样例获取、编译运行、评测、压力测试与多平台提交。",
@@ -104,6 +105,7 @@
     "githubApi": "主要开发语言",
     "selectedRepositories": "8 个精选项目",
     "dailyAverage": "日均",
+    "duration": "{hours} 小时 {minutes} 分钟",
     "profileLabel": "GitHub 主页",
     "profileDescription": "开源项目、实验、Issue 与协作记录都在这里公开更新。",
     "profileLink": "查看 GitHub 主页",
@@ -136,6 +138,16 @@
     "draft": "草稿",
     "merged": "已合并",
     "closed": "已关闭",
+    "selectedTypes": "已选择 {count} 种类型",
+    "types": {
+      "issueOpen": "Issue · 进行中",
+      "issueClosed": "Issue · 已关闭",
+      "issueNotPlanned": "Issue · 不计划处理",
+      "issueDuplicate": "Issue · 重复问题",
+      "pullRequestOpen": "PR · 进行中",
+      "pullRequestMerged": "PR · 已合并",
+      "pullRequestClosed": "PR · 已关闭"
+    },
     "closedReason": {
       "notPlanned": "已关闭（不计划处理）",
       "duplicate": "已关闭（重复问题 #{number}）",

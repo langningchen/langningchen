@@ -13,6 +13,7 @@ export const FALLBACK_GITHUB_LANGUAGES: LanguageStat[] = [
 
 export const FALLBACK_WAKATIME: WakaTimeData = {
   dailyAverage: "2 hrs 52 mins",
+  dailyAverageSeconds: 10_320,
   languages: [
     { color: "#f05c82", name: "C++", value: 39.41 },
     { color: "#3178c6", name: "TypeScript", value: 25.35 },
@@ -23,14 +24,15 @@ export const FALLBACK_WAKATIME: WakaTimeData = {
   ],
   range: "since Jul 27 2022",
   total: "3,168 hrs 18 mins",
+  totalSeconds: 11_405_880,
 };
 
 export const FALLBACK_CONTRIBUTIONS: ContributionProject[] = [
-  { issues: 0, name: "cloudflare/workers-sdk", pullRequests: 1, url: "https://github.com/cloudflare/workers-sdk" },
-  { issues: 1, name: "hydro-dev/Hydro", pullRequests: 2, url: "https://github.com/hydro-dev/Hydro" },
-  { issues: 0, name: "jmerle/competitive-companion", pullRequests: 1, url: "https://github.com/jmerle/competitive-companion" },
-  { issues: 8, name: "CYEZOI/OJ", pullRequests: 1, url: "https://github.com/CYEZOI/OJ" },
-  { issues: 0, name: "yltx/vscode-luogu", pullRequests: 2, url: "https://github.com/yltx/vscode-luogu" },
-  { issues: 1, name: "MasterKale/SimpleWebAuthn", pullRequests: 0, url: "https://github.com/MasterKale/SimpleWebAuthn" },
-  { issues: 1, name: "microsoft/vscode", pullRequests: 0, url: "https://github.com/microsoft/vscode" },
+  { issues: 0, name: "cloudflare/workers-sdk", pullRequests: 1, stars: 0, url: "https://github.com/cloudflare/workers-sdk" },
+  { issues: 1, name: "hydro-dev/Hydro", pullRequests: 2, stars: 0, url: "https://github.com/hydro-dev/Hydro" },
+  { issues: 0, name: "jmerle/competitive-companion", pullRequests: 1, stars: 0, url: "https://github.com/jmerle/competitive-companion" },
+  { issues: 8, name: "CYEZOI/OJ", pullRequests: 1, stars: 0, url: "https://github.com/CYEZOI/OJ" },
+  { issues: 0, name: "yltx/vscode-luogu", pullRequests: 2, stars: 0, url: "https://github.com/yltx/vscode-luogu" },
+  { issues: 1, name: "MasterKale/SimpleWebAuthn", pullRequests: 0, stars: 0, url: "https://github.com/MasterKale/SimpleWebAuthn" },
+  { issues: 1, name: "microsoft/vscode", pullRequests: 0, stars: 0, url: "https://github.com/microsoft/vscode" },
 ];

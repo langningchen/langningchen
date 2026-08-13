@@ -49,13 +49,9 @@ export default function CommunityRecordItem(props: CommunityRecordItemProps) {
       ? "Draft"
       : statusKind === "merged"
         ? "Merged"
-        : statusKind === "notPlanned"
-          ? "Closed as not planned"
-          : statusKind === "duplicate" && record.duplicateOf
-            ? `Closed as duplicate of #${record.duplicateOf}`
-            : "Closed";
+        : "Closed";
   const statusColor = {
-    closed: "#8957e5",
+    closed: pullRequest ? "#da3633" : "#8957e5",
     draft: "#656c76",
     duplicate: "#656c76",
     merged: "#8957e5",
@@ -63,14 +59,14 @@ export default function CommunityRecordItem(props: CommunityRecordItemProps) {
     open: "#238636",
   }[statusKind];
   const statusIcon: ReactNode = statusKind === "open"
-    ? pullRequest ? <GitPullRequestIcon size={14} /> : <IssueOpenedIcon size={14} />
+    ? pullRequest ? <GitPullRequestIcon size={18} /> : <IssueOpenedIcon size={18} />
     : statusKind === "draft"
-      ? <GitPullRequestDraftIcon size={14} />
+      ? <GitPullRequestDraftIcon size={18} />
       : statusKind === "merged"
-        ? <GitMergeIcon size={14} />
+        ? <GitMergeIcon size={18} />
         : statusKind === "notPlanned" || statusKind === "duplicate"
-          ? <SkipIcon size={14} />
-          : pullRequest ? <GitPullRequestClosedIcon size={14} /> : <IssueClosedIcon size={14} />;
+          ? <SkipIcon size={18} />
+          : pullRequest ? <GitPullRequestClosedIcon size={18} /> : <IssueClosedIcon size={18} />;
   const openRecord = () => {
     window.open(record.url, "_blank", "noopener,noreferrer");
   };
@@ -92,13 +88,12 @@ export default function CommunityRecordItem(props: CommunityRecordItemProps) {
       onKeyDown={handleKeyDown}
       role="link"
       sx={{
-        alignItems: { md: "center" },
         borderTop: 1,
         borderColor: "divider",
         cursor: "pointer",
         display: "grid",
-        gap: 1.25,
-        gridTemplateColumns: "minmax(0, 1fr)",
+        gap: 1,
+        gridTemplateColumns: "auto minmax(0, 1fr) auto",
         outline: "none",
         py: 1.5,
         "&:focus-visible": { bgcolor: "action.hover" },
@@ -106,76 +101,71 @@ export default function CommunityRecordItem(props: CommunityRecordItemProps) {
       }}
       tabIndex={0}
     >
-      <Stack direction="row" spacing={1} sx={{ alignItems: "flex-start", minWidth: 0 }}>
-        <Box
-          aria-label={statusLabel}
-          component="span"
-          sx={{ color: statusColor, display: "inline-flex", flex: "0 0 auto", mt: "4px" }}
-          title={statusLabel}
-        >
-          {statusIcon}
-        </Box>
-        <Box sx={{ flex: 1, minWidth: 0 }}>
-          <Stack direction="row" sx={{ alignItems: "baseline", flexWrap: "wrap", gap: 0.75 }}>
-            <Typography
-              component="a"
-              href={record.url}
-              onClick={(event) => event.stopPropagation()}
-              rel="noreferrer"
-              sx={{
-                color: "inherit",
-                display: "inline-block",
-                fontSize: { xs: 16, sm: 17 },
-                fontWeight: 700,
-                lineHeight: 1.35,
-                maxWidth: "100%",
-                overflowWrap: "anywhere",
-                textDecoration: "none",
-                "&:hover": { color: "primary.main" },
-              }}
-              target="_blank"
-            >
-              {record.title}
+      <Box
+        aria-label={statusLabel}
+        component="span"
+        sx={{ alignSelf: "center", color: statusColor, display: "inline-flex", ml: 1 }}
+        title={statusLabel}
+      >
+        {statusIcon}
+      </Box>
+      <Box sx={{ minWidth: 0 }}>
+        <Stack direction="row" sx={{ alignItems: "center" }}>
+          <Typography
+            component="a"
+            href={record.url}
+            onClick={(event) => event.stopPropagation()}
+            rel="noreferrer"
+            sx={{
+              color: "inherit",
+              display: "inline-block",
+              fontSize: { xs: 16, sm: 17 },
+              fontWeight: 700,
+              lineHeight: 1.35,
+              maxWidth: "100%",
+              overflowWrap: "anywhere",
+              textDecoration: "none",
+              "&:hover": { color: "primary.main" },
+            }}
+            target="_blank"
+          >
+            {record.title}
+          </Typography>
+        </Stack>
+        <Stack direction="row" sx={{ alignItems: "center", flexWrap: "wrap", gap: 0.75, mt: 0.45 }}>
+          <Box
+            component="a"
+            href={repositoryUrl(record.repository)}
+            onClick={(event) => event.stopPropagation()}
+            rel="noreferrer"
+            sx={{
+              alignItems: "center",
+              color: "primary.main",
+              display: "inline-flex",
+              minWidth: 0,
+              textDecoration: "none",
+              "&:hover": { color: "primary.light", textDecoration: "underline" },
+            }}
+            target="_blank"
+          >
+            <Typography className="mono" noWrap sx={{ fontSize: 12, fontWeight: 700 }}>
+              {record.repository}
             </Typography>
-            <Typography className="mono" component="span" sx={{ color: statusColor, fontSize: 11.5, fontWeight: 700 }}>
-              {statusLabel}
-            </Typography>
-          </Stack>
-          <Stack direction="row" sx={{ alignItems: "center", flexWrap: "wrap", gap: 0.75, mt: 0.45 }}>
-            <Box
-              component="a"
-              href={repositoryUrl(record.repository)}
-              onClick={(event) => event.stopPropagation()}
-              rel="noreferrer"
-              sx={{
-                alignItems: "center",
-                color: "primary.main",
-                display: "inline-flex",
-                gap: 0.45,
-                minWidth: 0,
-                textDecoration: "none",
-                "&:hover": { color: "primary.light", textDecoration: "underline" },
-              }}
-              target="_blank"
-            >
-              {pullRequest ? <GitPullRequestIcon size={13} /> : <IssueOpenedIcon size={13} />}
-              <Typography className="mono" noWrap sx={{ fontSize: 12, fontWeight: 700 }}>
-                {record.repository}
-              </Typography>
-            </Box>
-            <Typography className="mono" color="text.secondary" sx={{ fontSize: 11.5 }}>
-              #{record.number} · {updatedLabel}
-            </Typography>
-            {(record.interactions ?? 0) > 0 && (
-              <Stack direction="row" spacing={0.4} sx={{ alignItems: "center", color: "text.secondary" }}>
-                <CommentIcon size={12} />
-                <Typography className="mono" component="span" sx={{ fontSize: 11.5 }}>
-                  {record.interactions}
-                </Typography>
-              </Stack>
-            )}
-          </Stack>
-        </Box>
+          </Box>
+          <Typography className="mono" color="text.secondary" sx={{ fontSize: 11.5 }}>
+            #{record.number} · {updatedLabel}
+          </Typography>
+        </Stack>
+      </Box>
+      <Stack
+        direction="row"
+        spacing={0.4}
+        sx={{ alignItems: "center", alignSelf: "stretch", color: "text.secondary", justifyContent: "center", mr: 1 }}
+      >
+        <CommentIcon size={14} />
+        <Typography className="mono" component="span" sx={{ fontSize: 11.5 }}>
+          {record.interactions ?? 0}
+        </Typography>
       </Stack>
     </Box>
   );

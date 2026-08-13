@@ -1,20 +1,22 @@
 "use client";
 
 import {
-  ClockIcon,
-  CommentDiscussionIcon,
-  FilterIcon,
+  GitMergeIcon,
+  GitPullRequestClosedIcon,
   GitPullRequestIcon,
   IssueClosedIcon,
   IssueOpenedIcon,
+  SkipIcon,
 } from "@primer/octicons-react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useFormatter, useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { useMemo, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import Avatar from "@mui/material/Avatar";
+import Checkbox from "@mui/material/Checkbox";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -37,10 +39,34 @@ const filterControlSx = {
   "& .MuiSelect-select": { alignItems: "center", display: "flex", gap: 0.75, py: 0 },
 };
 
-const filterOptionSx = { gap: 1 };
+const filterOptionSx = { minHeight: 36, py: 0.25 };
+const filterCheckboxSx = { ml: -0.5, mr: 0.5, p: 0.5 };
 
 interface CommunityArchiveShellProps {
   records: ContributionRecord[];
+}
+
+type ContributionTypeFilter =
+  | "issueOpen"
+  | "issueClosed"
+  | "issueNotPlanned"
+  | "issueDuplicate"
+  | "pullRequestOpen"
+  | "pullRequestMerged"
+  | "pullRequestClosed";
+
+function contributionType(record: ContributionRecord): ContributionTypeFilter {
+  if (record.kind === "pullRequest") {
+    if (record.state === "open") return "pullRequestOpen";
+    return record.closedReason === "merged"
+      ? "pullRequestMerged"
+      : "pullRequestClosed";
+  }
+
+  if (record.state === "open") return "issueOpen";
+  if (record.closedReason === "notPlanned") return "issueNotPlanned";
+  if (record.closedReason === "duplicate") return "issueDuplicate";
+  return "issueClosed";
 }
 
 function repositoryOwner(repository: string): string {
@@ -52,10 +78,23 @@ export default function CommunityArchiveShell({ records }: CommunityArchiveShell
   const t = useTranslations("communityArchive");
   const tNav = useTranslations("nav");
   const reduceMotion = useReducedMotion();
-  const [kind, setKind] = useState<"all" | "pullRequest" | "issue">("all");
-  const [state, setState] = useState<"all" | "open" | "closed">("all");
+  const [typeFilters, setTypeFilters] = useState<ContributionTypeFilter[]>([]);
   const [repository, setRepository] = useState("all");
   const [sort, setSort] = useState<"updated" | "interactions">("updated");
+  const typeOptions = [
+    { color: "#238636", icon: <IssueOpenedIcon size={16} />, label: t("types.issueOpen"), value: "issueOpen" },
+    { color: "#8957e5", icon: <IssueClosedIcon size={16} />, label: t("types.issueClosed"), value: "issueClosed" },
+    { color: "#656c76", icon: <SkipIcon size={16} />, label: t("types.issueNotPlanned"), value: "issueNotPlanned" },
+    { color: "#656c76", icon: <SkipIcon size={16} />, label: t("types.issueDuplicate"), value: "issueDuplicate" },
+    { color: "#238636", icon: <GitPullRequestIcon size={16} />, label: t("types.pullRequestOpen"), value: "pullRequestOpen" },
+    { color: "#8957e5", icon: <GitMergeIcon size={16} />, label: t("types.pullRequestMerged"), value: "pullRequestMerged" },
+    { color: "#da3633", icon: <GitPullRequestClosedIcon size={16} />, label: t("types.pullRequestClosed"), value: "pullRequestClosed" },
+  ] satisfies Array<{
+    color: string;
+    icon: ReactNode;
+    label: string;
+    value: ContributionTypeFilter;
+  }>;
   const repositories = useMemo(
     () => [...new Set(records.map((record) => record.repository))].sort((left, right) => left.localeCompare(right)),
     [records],
@@ -63,8 +102,7 @@ export default function CommunityArchiveShell({ records }: CommunityArchiveShell
   const repositoryOptions = useMemo(() => ["all", ...repositories], [repositories]);
   const filteredRecords = useMemo(() => {
     const filtered = records.filter((record) => {
-      return (kind === "all" || record.kind === kind)
-        && (state === "all" || record.state === state)
+      return (typeFilters.length === 0 || typeFilters.includes(contributionType(record)))
         && (repository === "all" || record.repository === repository);
     });
 
@@ -73,7 +111,7 @@ export default function CommunityArchiveShell({ records }: CommunityArchiveShell
       if (sort === "updated") return updatedDifference;
       return (right.interactions ?? 0) - (left.interactions ?? 0) || updatedDifference;
     });
-  }, [kind, records, repository, sort, state]);
+  }, [records, repository, sort, typeFilters]);
 
   return (
     <SubpageEntrance variant="community">
@@ -88,8 +126,6 @@ export default function CommunityArchiveShell({ records }: CommunityArchiveShell
                 aria-label={t("filters")}
                 sx={{
                   alignItems: { xs: "stretch", sm: "center" },
-                  borderBottom: 1,
-                  borderColor: "divider",
                   display: "flex",
                   flexWrap: "wrap",
                   gap: 1.25,
@@ -104,48 +140,51 @@ export default function CommunityArchiveShell({ records }: CommunityArchiveShell
                   sx={{ flex: 1, flexWrap: { sm: "wrap" }, minWidth: 0 }}
                   useFlexGap
                 >
-                  <FormControl size="small" sx={filterControlSx}>
-                    <InputLabel id="community-kind-label">{t("type")}</InputLabel>
+                  <FormControl size="small" sx={{ ...filterControlSx, minWidth: { sm: 210 } }}>
+                    <InputLabel id="community-type-label" shrink>{t("type")}</InputLabel>
                     <Select
+                      displayEmpty
+                      multiple
                       label={t("type")}
-                      labelId="community-kind-label"
-                      onChange={(event) => setKind(event.target.value as typeof kind)}
-                      value={kind}
+                      labelId="community-type-label"
+                      MenuProps={{ slotProps: { list: { dense: true } } }}
+                      onChange={(event) => {
+                        const value = typeof event.target.value === "string"
+                          ? event.target.value.split(",")
+                          : event.target.value;
+                        setTypeFilters(value.includes("all")
+                          ? []
+                          : value as ContributionTypeFilter[]);
+                      }}
+                      renderValue={(selected) => {
+                        if (selected.length === 0) return t("all");
+                        if (selected.length === 1) {
+                          return typeOptions.find((option) => option.value === selected[0])?.label;
+                        }
+                        return t("selectedTypes", { count: selected.length });
+                      }}
+                      value={typeFilters}
                     >
                       <MenuItem sx={filterOptionSx} value="all">
-                        <Box component="span" sx={{ color: "#656c76", display: "inline-flex" }}><FilterIcon size={14} /></Box>
+                        <Checkbox checked={typeFilters.length === 0} size="small" sx={filterCheckboxSx} />
                         {t("all")}
                       </MenuItem>
-                      <MenuItem sx={filterOptionSx} value="pullRequest">
-                        <Box component="span" sx={{ color: "#8957e5", display: "inline-flex" }}><GitPullRequestIcon size={14} /></Box>
-                        {t("pullRequest")}
-                      </MenuItem>
-                      <MenuItem sx={filterOptionSx} value="issue">
-                        <Box component="span" sx={{ color: "#238636", display: "inline-flex" }}><IssueOpenedIcon size={14} /></Box>
-                        {t("issue")}
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                  <FormControl size="small" sx={filterControlSx}>
-                    <InputLabel id="community-state-label">{t("result")}</InputLabel>
-                    <Select
-                      label={t("result")}
-                      labelId="community-state-label"
-                      onChange={(event) => setState(event.target.value as typeof state)}
-                      value={state}
-                    >
-                      <MenuItem sx={filterOptionSx} value="all">
-                        <Box component="span" sx={{ color: "#656c76", display: "inline-flex" }}><FilterIcon size={14} /></Box>
-                        {t("all")}
-                      </MenuItem>
-                      <MenuItem sx={filterOptionSx} value="open">
-                        <Box component="span" sx={{ color: "#238636", display: "inline-flex" }}><IssueOpenedIcon size={14} /></Box>
-                        {t("open")}
-                      </MenuItem>
-                      <MenuItem sx={filterOptionSx} value="closed">
-                        <Box component="span" sx={{ color: "#8957e5", display: "inline-flex" }}><IssueClosedIcon size={14} /></Box>
-                        {t("closed")}
-                      </MenuItem>
+                      {typeOptions.map((option) => (
+                        <MenuItem key={option.value} sx={filterOptionSx} value={option.value}>
+                          <Checkbox
+                            checked={typeFilters.includes(option.value)}
+                            size="small"
+                            sx={filterCheckboxSx}
+                          />
+                          <Box
+                            component="span"
+                            sx={{ color: option.color, display: "inline-flex", justifyContent: "center", mr: 0.75, width: 20 }}
+                          >
+                            {option.icon}
+                          </Box>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                   <Autocomplete
@@ -198,14 +237,8 @@ export default function CommunityArchiveShell({ records }: CommunityArchiveShell
                       onChange={(event) => setSort(event.target.value as typeof sort)}
                       value={sort}
                     >
-                      <MenuItem sx={filterOptionSx} value="updated">
-                        <ClockIcon size={14} />
-                        {t("sortUpdated")}
-                      </MenuItem>
-                      <MenuItem sx={filterOptionSx} value="interactions">
-                        <CommentDiscussionIcon size={14} />
-                        {t("sortInteractions")}
-                      </MenuItem>
+                      <MenuItem value="updated">{t("sortUpdated")}</MenuItem>
+                      <MenuItem value="interactions">{t("sortInteractions")}</MenuItem>
                     </Select>
                   </FormControl>
                 </Stack>

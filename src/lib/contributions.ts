@@ -23,6 +23,7 @@ export interface ContributionProject {
   issues: number;
   name: string;
   pullRequests: number;
+  stars: number;
   url: string;
 }
 
@@ -64,25 +65,18 @@ export interface CommunityData {
   records: ContributionRecord[];
 }
 
-const CONTRIBUTION_PRIORITY = [
-  "cloudflare/workers-sdk",
-  "hydro-dev/Hydro",
-  "jmerle/competitive-companion",
-  "CYEZOI/OJ",
-  "yltx/vscode-luogu",
-  "MasterKale/SimpleWebAuthn",
-  "microsoft/vscode",
-  "extend-luogu/extend-luogu",
-];
-
 const HIDDEN_CONTRIBUTION_REPOSITORIES = new Set([
   "clash-verge-rev/clash-verge-rev",
-  "vernesong/OpenClash",
+  "vernesong/openclash",
 ]);
 
+function isExternalContributionRepository(repository: string): boolean {
+  return !repository.toLowerCase().startsWith("langningchen/");
+}
+
 export function isVisibleContributionRepository(repository: string): boolean {
-  return !repository.startsWith("langningchen/")
-    && !HIDDEN_CONTRIBUTION_REPOSITORIES.has(repository);
+  return isExternalContributionRepository(repository)
+    && !HIDDEN_CONTRIBUTION_REPOSITORIES.has(repository.toLowerCase());
 }
 
 function repositoryName(repositoryUrl: string): string {
@@ -92,6 +86,7 @@ function repositoryName(repositoryUrl: string): string {
 export function aggregateContributions(
   pullRequests: GitHubSearchItem[],
   issues: GitHubSearchItem[],
+  repositoryStars: ReadonlyMap<string, number> = new Map(),
 ): ContributionProject[] {
   const projects = new Map<string, ContributionProject>();
 
@@ -101,6 +96,7 @@ export function aggregateContributions(
       issues: 0,
       name,
       pullRequests: 0,
+      stars: repositoryStars.get(name) ?? 0,
       url: `https://github.com/${name}`,
     };
     current.pullRequests += 1;
@@ -113,22 +109,33 @@ export function aggregateContributions(
       issues: 0,
       name,
       pullRequests: 0,
+      stars: repositoryStars.get(name) ?? 0,
       url: `https://github.com/${name}`,
     };
     current.issues += 1;
     projects.set(name, current);
   });
 
-  return [...projects.values()]
-    .filter((project) => isVisibleContributionRepository(project.name))
-    .sort((left, right) => {
-      const leftPriority = CONTRIBUTION_PRIORITY.indexOf(left.name);
-      const rightPriority = CONTRIBUTION_PRIORITY.indexOf(right.name);
-      const normalizedLeft = leftPriority === -1 ? CONTRIBUTION_PRIORITY.length : leftPriority;
-      const normalizedRight = rightPriority === -1 ? CONTRIBUTION_PRIORITY.length : rightPriority;
-      if (normalizedLeft !== normalizedRight) return normalizedLeft - normalizedRight;
-      return right.pullRequests + right.issues - left.pullRequests - left.issues;
-    });
+  return sortContributionProjects(
+    [...projects.values()].filter((project) => isVisibleContributionRepository(project.name)),
+  );
+}
+
+export function sortContributionProjects(
+  projects: ContributionProject[],
+): ContributionProject[] {
+  return [...projects].sort((left, right) => {
+    const leftContributions = left.pullRequests + left.issues;
+    const rightContributions = right.pullRequests + right.issues;
+    const scoreDifference = rightContributions * right.stars
+      - leftContributions * left.stars;
+    if (scoreDifference !== 0) return scoreDifference;
+    if (right.stars !== left.stars) return right.stars - left.stars;
+    if (rightContributions !== leftContributions) {
+      return rightContributions - leftContributions;
+    }
+    return left.name.localeCompare(right.name);
+  });
 }
 
 export function collectContributionRecords(

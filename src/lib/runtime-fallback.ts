@@ -2,10 +2,12 @@ import snapshot from "@/data/runtime-fallback.json";
 import type { ContributionCalendarData } from "./contribution-calendar";
 import {
   isVisibleContributionRepository,
+  sortContributionProjects,
   type CommunityData,
   type ContributionProject,
 } from "./contributions";
 import type { GameProfile } from "./game-types";
+import type { GitHubRepository } from "./github";
 import type { GitHubData } from "./github-server";
 import type { WakaTimeData } from "./wakatime";
 
@@ -21,11 +23,24 @@ interface RuntimeFallbackSnapshot {
   wakaTime: WakaTimeData;
 }
 
-type LegacyRuntimeFallbackSnapshot = Omit<RuntimeFallbackSnapshot, "community"> & {
-  community: CommunityData | ContributionProject[];
+type LegacyContributionProject = Omit<ContributionProject, "stars"> & {
+  stars?: number;
 };
 
-const legacyCompatibleSnapshot = snapshot as LegacyRuntimeFallbackSnapshot;
+type LegacyCommunityData = Omit<CommunityData, "projects"> & {
+  projects: LegacyContributionProject[];
+};
+
+type LegacyGitHubData = Omit<GitHubData, "projects"> & {
+  projects?: GitHubRepository[];
+};
+
+type LegacyRuntimeFallbackSnapshot = Omit<RuntimeFallbackSnapshot, "community" | "github"> & {
+  community: LegacyCommunityData | LegacyContributionProject[];
+  github: LegacyGitHubData;
+};
+
+const legacyCompatibleSnapshot = snapshot as unknown as LegacyRuntimeFallbackSnapshot;
 const fallbackCommunity = Array.isArray(legacyCompatibleSnapshot.community)
   ? { projects: legacyCompatibleSnapshot.community, records: [] }
   : legacyCompatibleSnapshot.community;
@@ -33,11 +48,18 @@ const fallbackCommunity = Array.isArray(legacyCompatibleSnapshot.community)
 export const RUNTIME_FALLBACK: RuntimeFallbackSnapshot = {
   ...legacyCompatibleSnapshot,
   community: {
-    projects: fallbackCommunity.projects.filter((project) => {
-      return isVisibleContributionRepository(project.name);
-    }),
+    projects: sortContributionProjects(
+      fallbackCommunity.projects
+        .filter((project) => isVisibleContributionRepository(project.name))
+        .map((project) => ({ ...project, stars: project.stars ?? 0 })),
+    ),
     records: fallbackCommunity.records.filter((record) => {
       return isVisibleContributionRepository(record.repository);
     }),
+  },
+  github: {
+    ...legacyCompatibleSnapshot.github,
+    projects: legacyCompatibleSnapshot.github.projects
+      ?? legacyCompatibleSnapshot.github.featured,
   },
 };

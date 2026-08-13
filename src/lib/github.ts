@@ -106,6 +106,23 @@ export function selectFeaturedRepositories(
     .slice(0, 8);
 }
 
+export function selectProjectRepositories(
+  repositories: GitHubRepository[],
+): GitHubRepository[] {
+  return repositories
+    .filter((repository) => !repository.fork)
+    .filter((repository) => !EXCLUDED.has(repository.name.toLowerCase()))
+    .sort((left, right) => {
+      const starDifference = right.stargazers_count - left.stargazers_count;
+      if (starDifference !== 0) return starDifference;
+
+      const updatedDifference = Date.parse(right.pushed_at) - Date.parse(left.pushed_at);
+      if (updatedDifference !== 0) return updatedDifference;
+
+      return left.name.localeCompare(right.name);
+    });
+}
+
 export function sumRepositoryStars(repositories: GitHubRepository[]): number {
   return repositories.reduce(
     (total, repository) => total + repository.stargazers_count,

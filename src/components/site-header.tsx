@@ -64,9 +64,7 @@ export default function SiteHeader(props: SiteHeaderProps) {
             <NavigationLinks homeSections={homeSections} />
           </Box>
           <Stack direction="row" spacing={1} sx={{ alignItems: "center", ml: { xs: 1, lg: 2 } }}>
-            <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              <LanguageToggle language={language} onChange={onLanguageChange} />
-            </Box>
+            <LanguageToggle language={language} onChange={onLanguageChange} />
             <Tooltip title={mode === "dark" ? tTheme("light") : tTheme("dark")}>
               <IconButton
                 aria-label={mode === "dark" ? tTheme("light") : tTheme("dark")}
@@ -105,7 +103,6 @@ export default function SiteHeader(props: SiteHeaderProps) {
             Langning Chen
           </Typography>
           <NavigationLinks direction="column" homeSections={homeSections} onNavigate={() => setDrawerOpen(false)} />
-          <LanguageToggle language={language} onChange={onLanguageChange} />
         </Stack>
       </Drawer>
     </AppBar>

@@ -8,18 +8,22 @@ interface WakaTimeItem {
 
 export interface WakaTimeResponse {
   data: {
+    daily_average: number;
     human_readable_daily_average: string;
     human_readable_range: string;
     human_readable_total: string;
     languages: WakaTimeItem[];
+    total_seconds: number;
   };
 }
 
 export interface WakaTimeData {
   dailyAverage: string;
+  dailyAverageSeconds: number;
   languages: LanguageStat[];
   range: string;
   total: string;
+  totalSeconds: number;
 }
 
 const COLORS: Record<string, string> = {
@@ -44,6 +48,7 @@ const PROGRAMMING_LANGUAGES = new Set([
 export function normalizeWakaTime(response: WakaTimeResponse): WakaTimeData {
   return {
     dailyAverage: response.data.human_readable_daily_average,
+    dailyAverageSeconds: response.data.daily_average,
     languages: response.data.languages
       .filter((language) => PROGRAMMING_LANGUAGES.has(language.name))
       .slice(0, 6)
@@ -54,5 +59,6 @@ export function normalizeWakaTime(response: WakaTimeResponse): WakaTimeData {
       })),
     range: response.data.human_readable_range,
     total: response.data.human_readable_total,
+    totalSeconds: response.data.total_seconds,
   };
 }
