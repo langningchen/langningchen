@@ -16,23 +16,57 @@ jobs:
         run: |
           URLS=(
             "https://langningchen.com/"
-            "https://langningchen.com/projects/"
-            "https://langningchen.com/community/"
-            "https://langningchen.com/games/genshin/"
-            "https://langningchen.com/games/star-rail/"
             "https://github.com/langningchen"
           )
 
           for url in "${URLS[@]}"; do
-            echo "----------------------------------------"
-            echo "Archiving: $url"
+            echo "========================================"
+            echo "Requesting archive for: $url"
 
-            response=$(curl -s -X POST "https://web.archive.org/save" \
-              -H "Accept: application/json" \
-              -H "Authorization: LOW ${IA_ACCESS}:${IA_SECRET}" \
-              -d "url=$url")
+            # Retry loop in case the session limit is hit
+            job_id=""
+            while :; do
+              response=$(curl -s -X POST "https://web.archive.org/save" \
+                -H "Accept: application/json" \
+                -H "Authorization: LOW ${IA_ACCESS}:${IA_SECRET}" \
+                -d "url=$url")
 
-            echo "IA Response: $response"
+              echo "Submit response: $response"
 
+              job_id=$(echo "$response" | jq -r '.job_id // empty')
+              status_ext=$(echo "$response" | jq -r '.status_ext // empty')
+
+              if [[ -n "$job_id" ]]; then
+                break
+              elif [[ "$status_ext" == "error:user-session-limit" ]]; then
+                echo "Session limit reached. Waiting 30 seconds before retrying..."
+                sleep 30
+              else
+                echo "Failed or unrecoverable error for $url"
+                break
+              fi
+            done
+
+            # If we received a job_id, poll until the capture finishes
+            if [[ -n "$job_id" ]]; then
+              echo "Polling status for job: $job_id"
+              while :; do
+                sleep 10
+
+                status_resp=$(curl -s -X GET "https://web.archive.org/save/status/$job_id" \
+                  -H "Accept: application/json" \
+                  -H "Authorization: LOW ${IA_ACCESS}:${IA_SECRET}")
+
+                job_status=$(echo "$status_resp" | jq -r '.status // empty')
+                echo "Current status: $job_status"
+
+                if [[ "$job_status" != "pending" ]]; then
+                  echo "Final status response: $status_resp"
+                  break
+                fi
+              done
+            fi
+
+            # Extra pause between jobs to be gentle with rate limits
             sleep 5
           done
