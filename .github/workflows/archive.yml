@@ -1,0 +1,38 @@
+name: Periodic Wayback Archive
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Archive URLs to Wayback Machine
+        env:
+          IA_ACCESS: ${{ secrets.IA_ACCESS_KEY }}
+          IA_SECRET: ${{ secrets.IA_SECRET_KEY }}
+        run: |
+          URLS=(
+            "https://langningchen.com/"
+            "https://langningchen.com/projects/"
+            "https://langningchen.com/community/"
+            "https://langningchen.com/games/genshin/"
+            "https://langningchen.com/games/star-rail/"
+            "https://github.com/langningchen"
+          )
+
+          for url in "${URLS[@]}"; do
+            echo "----------------------------------------"
+            echo "Archiving: $url"
+
+            response=$(curl -s -X POST "https://web.archive.org/save" \
+              -H "Accept: application/json" \
+              -H "Authorization: LOW ${IA_ACCESS}:${IA_SECRET}" \
+              -d "url=$url")
+
+            echo "IA Response: $response"
+
+            sleep 5
+          done
